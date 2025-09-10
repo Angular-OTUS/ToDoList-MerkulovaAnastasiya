@@ -7,3 +7,48 @@
 .header {
   margin-bottom: 20px;
 }
+.todos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 650px;
+  overflow-y: auto;
+}
+.todo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  background-color: #f2f2f2;
+  border-radius: 6px;
+  padding-inline: 18px;
+}
+.todo-text {
+  padding-block: 14px;
+}
+.deleteBtn {
+  padding: 14px 8px;
+  font-size: 16px;
+  border: 1px solid #000000;
+}
+.add-todo-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+.form-input {
+  width: 100%;
+  height: 50px;
+  padding: 14px 18px;
+  font-size: 18px;
+  border: 1px solid #2d2d2d;
+  border-radius: 6px;
+}
+.form-submitBtn {
+  width: 30%;
+  padding: 13px 4px;
+  font-size: 18px;
+  color: #ffffff;
+  background-color: #b693eb;
+}

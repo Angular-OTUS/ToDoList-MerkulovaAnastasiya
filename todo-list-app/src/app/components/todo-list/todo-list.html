@@ -1,0 +1,19 @@
+<div class="container">
+  <h1 class="header">Todo List</h1>
+
+  <ul class="todos-list">
+    @for (todo of todos; track todo.id){
+    <li class="todo-item">
+      <span class="todo-text">{{todo.text}}</span>
+      <button type="button" class="deleteBtn">Delete</button>
+    </li>
+    } @empty {
+    <li>There are no items.</li>
+    }
+  </ul>
+
+  <form class="add-todo-form">
+    <input type="text" class="form-input" placeholder="Add your new todo" />
+    <button type="submit" class="form-submitBtn">Add task</button>
+  </form>
+</div>

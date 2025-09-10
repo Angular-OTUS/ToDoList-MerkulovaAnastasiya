@@ -1,0 +1,12 @@
+@use 'reset';
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+button {
+  border-radius: 8px;
+  &:hover {
+    filter: contrast(2);
+  }
+}

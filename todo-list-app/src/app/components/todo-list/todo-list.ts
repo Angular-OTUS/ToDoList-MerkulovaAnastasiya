@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TodoItem } from './todo-item.type';
+import { TTodoItem } from './todo-item.type';
 import { INITIAL_TODOS } from './todo-list.config';
 
 @Component({
@@ -9,5 +9,5 @@ import { INITIAL_TODOS } from './todo-list.config';
   styleUrl: './todo-list.scss'
 })
 export class TodoList {
-  protected todos: TodoItem[] = INITIAL_TODOS;
+  protected todos: TTodoItem[] = INITIAL_TODOS;
 }

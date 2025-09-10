@@ -1,4 +1,4 @@
-export type TodoItem = {
+export type TTodoItem = {
   id:number;
   text:string;
 }

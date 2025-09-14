@@ -3,17 +3,26 @@
 
   <ul class="todos-list">
     @for (todo of todos; track todo.id){
-    <li class="todo-item">
-      <span class="todo-text">{{todo.text}}</span>
-      <button type="button" class="deleteBtn">Delete</button>
-    </li>
+    <app-todo-list-item
+      [currentTodo]="todo"
+      (removeCurrentTodo)="deleteTodoById($event)"
+    ></app-todo-list-item>
     } @empty {
-    <li>There are no items.</li>
+    <li>There are no items. Type new task.</li>
     }
   </ul>
 
-  <form class="add-todo-form">
-    <input type="text" class="form-input" placeholder="Add your new todo" />
-    <button type="submit" class="form-submitBtn">Add task</button>
+  <form class="add-todo-form" (submit)="addNewTodo($event)">
+    <mat-form-field class="form-input-wrapper">
+      <input
+        type="text"
+        matInput
+        class="form-input"
+        placeholder="Add your new todo"
+        [(ngModel)]="newTodoText"
+        name="todo-input"
+      />
+    </mat-form-field>
+    <button type="submit" class="form-submitBtn" [disabled]="isSubmitDisabled">Add task</button>
   </form>
 </div>

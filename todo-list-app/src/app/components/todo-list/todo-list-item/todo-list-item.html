@@ -1,0 +1,6 @@
+@if (currentTodo) {
+<li class="todo-item">
+  <span class="todo-text">{{ currentTodo.text }}</span>
+  <button type="button" class="deleteBtn" (click)="handleRemoveTodo(currentTodo.id)">Delete</button>
+</li>
+}

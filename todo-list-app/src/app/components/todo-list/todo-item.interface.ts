@@ -1,4 +1,4 @@
-export type TTodoItem = {
+export interface ITodoItem {
   id:number;
   text:string;
 }

@@ -1,18 +1,25 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  input,
+  InputSignal,
+  output,
+  OutputEmitterRef
+} from '@angular/core';
+import { Button } from '../../../shared/ui/button/button';
 import { ITodoItem } from '../todo-item.interface';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-todo-list-item',
-  imports: [],
+  imports: [Button],
   templateUrl: './todo-list-item.html',
   styleUrl: './todo-list-item.scss',
 })
 export class TodoListItem {
-  @Input() public currentTodo?: ITodoItem;
-  @Output() public removeCurrentTodo: EventEmitter<number> = new EventEmitter();
+  public currentTodo: InputSignal<ITodoItem> = input.required<ITodoItem>();
 
-  handleRemoveTodo(id:number){
-    this.removeCurrentTodo.emit(id)
+  public removeCurrentTodo: OutputEmitterRef<number> = output<number>();
+
+  handleRemoveTodo(id: number) {
+    this.removeCurrentTodo.emit(id);
   }
 }

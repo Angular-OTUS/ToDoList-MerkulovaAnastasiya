@@ -34,10 +34,10 @@ export class TodoList implements OnInit, OnDestroy {
 
   public currentDescription = computed(() => {
     const selectedId = this.selectedItemId();
-    if (!selectedId) return '';
+    if (!selectedId) return null;
 
     const todo = this.todos().find((t) => t.id === selectedId);
-    return todo?.description ?? '';
+    return todo ? todo.description : null;
   });
 
   public isLoading: WritableSignal<boolean> = signal<boolean>(true);

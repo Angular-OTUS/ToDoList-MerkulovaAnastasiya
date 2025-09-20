@@ -6,8 +6,19 @@
   background-color: var(--mat-sys-tertiary-container);
   border-radius: 6px;
   padding-inline: 18px;
+  &:hover {
+    color: inherit;
+    background-color: var(--mat-sys-inverse-on-surface);
+    cursor: pointer;
+  }
+}
+
+.selected {
+  color: var(--mat-sys-inverse-on-surface);
+  background-color: var(--mat-sys-on-primary-fixed);
 }
 
 .todo-text {
+  width: 100%;
   padding-block: 14px;
 }

@@ -1,10 +1,18 @@
 @if (currentTodo()) {
-<li class="todo-item">
-  <span class="todo-text">{{ currentTodo().text }}</span>
+<li
+  class="todo-item"
+  (click)="handleTodoClick(currentTodo().id)"
+  [ngClass]="{ selected: isSelected() }"
+>
+  <span class="todo-text" appShowTooltip [tooltipText]="TOOLTIP_TEXT.LIST_ITEM">{{
+    currentTodo().text
+  }}</span>
   <app-button
     type="delete"
     title="Delete"
     (action)="handleRemoveTodo(currentTodo().id)"
+    appShowTooltip
+    [tooltipText]="TOOLTIP_TEXT.DELETE_BUTTON"
   ></app-button>
 </li>
 }

@@ -1,32 +1,35 @@
 <div class="container">
   <h1 class="header">Todo List</h1>
-
-  @if (isLoading()) {
-  <app-loader></app-loader>
-  } @else {
-  <ul class="todos-list">
-    @for (todo of todos(); track todo.id) {
-    <app-todo-list-item
-      [currentTodo]="todo"
-      (removeCurrentTodo)="deleteTodoById($event)"
-    ></app-todo-list-item>
-    } @empty {
-    <li>There are no items. Type new task.</li>
+  <div class="todos-section">
+    @if (isLoading()) {
+    <app-loader></app-loader>
+    } @else {
+    <ul class="todos-list">
+      @for (todo of todos(); track todo.id) {
+      <app-todo-list-item
+        [currentTodo]="todo"
+        [selectedId]="selectedItemId()"
+        (removeCurrentTodo)="deleteTodoById($event)"
+        (clickCurrentTodo)="selectTodoId($event)"
+      ></app-todo-list-item>
+      } @empty {
+      <li>There are no items. Type new task.</li>
+      }
+    </ul>
     }
-  </ul>
-  }
-
-  <form class="add-todo-form" (submit)="addNewTodo($event)">
-    <mat-form-field class="form-input-wrapper">
-      <input
-        type="text"
-        matInput
-        class="form-input"
-        placeholder="Add your new todo"
-        [(ngModel)]="newTodoText"
-        name="todo-input"
-      />
-    </mat-form-field>
-    <app-button type="submit" title="Add task" [isDisabled]="isSubmitDisabled()"></app-button>
-  </form>
+    <div>
+      @if(selectedItemId()){
+      <div class="todo-details">
+        <h3>Description</h3>
+        <p>{{ currentDescription() }}</p>
+      </div>
+      }
+    </div>
+  </div>
+  <app-todo-form
+    [(newTodoText)]="newTodoText"
+    [(newTodoDescription)]="newTodoDescription"
+    [isSubmitDisabled]="isSubmitDisabled()"
+    (addTodo)="addNewTodo()"
+  ></app-todo-form>
 </div>

@@ -1,0 +1,32 @@
+<div [ngStyle]="{ 'margin-top': '20px' }">
+  <h2>Add new todo</h2>
+  <form class="add-todo-form" (submit)="onSubmit($event)">
+    <div class="form-fields">
+      <mat-form-field class="form-input-wrapper">
+        <input
+          type="text"
+          matInput
+          placeholder="Todo title"
+          [(ngModel)]="newTodoText"
+          name="todo-title"
+        />
+      </mat-form-field>
+      <mat-form-field class="form-input-wrapper">
+        <textarea
+          matInput
+          placeholder="Todo description"
+          [(ngModel)]="newTodoDescription"
+          name="todo-description"
+        ></textarea>
+      </mat-form-field>
+    </div>
+    <app-button
+      type="submit"
+      title="Add task"
+      [isDisabled]="isSubmitDisabled()"
+      [ngClass]="'form-button'"
+      appShowTooltip
+      [tooltipText]="TOOLTIP_TEXT.ADD_BUTTON"
+    ></app-button>
+  </form>
+</div>

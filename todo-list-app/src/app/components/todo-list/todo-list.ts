@@ -16,6 +16,7 @@ import { ITodoItem } from '../../shared/types/todo-item.interface';
 import { Loader } from '../../shared/ui/loader/loader';
 import { TodoForm } from '../todo-form/todo-form';
 import { TodoListItem } from './todo-list-item/todo-list-item';
+import { EditTodoDto } from '../../shared/types/todo.dto';
 
 @Component({
   selector: 'app-todo-list',
@@ -78,6 +79,10 @@ export class TodoList implements OnInit, OnDestroy {
 
   public selectTodoId(id: number): void {
     this.selectedItemId.set(id);
+  }
+
+  public updateTodo(data: EditTodoDto): void {
+    this.todosDataService.editTodo(data);
   }
 
   public deleteTodoById(id: number): void {

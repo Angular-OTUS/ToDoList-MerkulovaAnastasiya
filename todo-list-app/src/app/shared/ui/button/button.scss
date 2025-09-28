@@ -2,12 +2,12 @@
   min-width: 100px;
   padding: 13px 4px;
   font-size: 18px;
-  background-color: forestgreen;
+  background-color: #3eb56c;
 }
 
 .delete-button {
   min-width: 70px;
   padding: 14px 8px;
   font-size: 16px;
-  background-color: crimson;
+  background-color: var(--mat-sys-primary);
 }

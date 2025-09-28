@@ -9,6 +9,7 @@
           placeholder="Todo title"
           [(ngModel)]="newTodoText"
           name="todo-title"
+          maxlength="45"
         />
       </mat-form-field>
       <mat-form-field class="form-input-wrapper">
@@ -26,6 +27,7 @@
       [ngClass]="'form-button'"
       appShowTooltip
       [tooltipText]="TOOLTIP_TEXT.ADD_BUTTON"
-    >Add task</app-button>
+      >Add task</app-button
+    >
   </form>
 </div>

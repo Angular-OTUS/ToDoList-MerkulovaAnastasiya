@@ -9,7 +9,6 @@ type TAppButton = 'submit' | 'delete';
   styleUrl: './button.scss',
 })
 export class Button {
-  public title: InputSignal<string> = input.required<string>();
   public type: InputSignal<TAppButton> = input.required<TAppButton>();
   public isDisabled: InputSignal<boolean> = input<boolean>(false);
 

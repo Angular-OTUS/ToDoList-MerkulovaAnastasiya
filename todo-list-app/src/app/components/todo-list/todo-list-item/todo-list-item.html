@@ -9,10 +9,10 @@
   }}</span>
   <app-button
     type="delete"
-    title="Delete"
-    (action)="handleRemoveTodo(currentTodo().id)"
+    (action)="handleRemoveTodo($event,currentTodo().id)"
     appShowTooltip
     [tooltipText]="TOOLTIP_TEXT.DELETE_BUTTON"
-  ></app-button>
+    >Delete</app-button
+  >
 </li>
 }

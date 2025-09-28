@@ -29,7 +29,8 @@ export class TodoListItem {
 
   public isSelected: Signal<boolean> = computed(() => this.selectedId() === this.currentTodo().id);
 
-  public handleRemoveTodo(id: number) {
+  public handleRemoveTodo(e:Event, id: number) {
+    e.stopPropagation();
     this.removeCurrentTodo.emit(id);
   }
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
+import { AddTodoDto, EditTodoDto } from '../../shared/types/dto/todo.dto';
 import { ITodoItem } from '../../shared/types/todo-item.interface';
-import { AddTodoDto, EditTodoDto } from '../../shared/types/todo.dto';
-import { generateTodoId } from '../../shared/util/helpers';
+import { generateNextId } from '../../shared/util/helpers';
 import { INITIAL_TODOS } from './todo-list.config';
 
 @Injectable({
@@ -11,7 +11,7 @@ export class TodosDataService {
   private todos: ITodoItem[] = INITIAL_TODOS;
 
   public addNewTodo(newTodo: AddTodoDto): void {
-    this.todos = [...this.todos, { ...newTodo, id: generateTodoId(this.todos) }];
+    this.todos = [...this.todos, { ...newTodo, id: generateNextId(this.todos) }];
   }
 
   public editTodo(todo: EditTodoDto): void {
@@ -20,8 +20,7 @@ export class TodosDataService {
   }
 
   public removeTodo(id: number): void {
-    const newTodos = [...this.todos.filter((todo) => todo.id !== id)];
-    this.todos = newTodos;
+    this.todos = [...this.todos.filter((todo) => todo.id !== id)];
   }
 
   public getTodoById(id: number): ITodoItem | undefined {

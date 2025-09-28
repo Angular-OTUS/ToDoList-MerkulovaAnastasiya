@@ -4,3 +4,9 @@ export const TOOLTIP_TEXT= {
   DELETE_BUTTON: 'Remove todo',
   SAVE_TITLE: 'Save new title',
 } as const;
+
+export const TOAST_TEXT= {
+  ADD_TODO: 'Todo successfully saved',
+  DELETE_TODO: 'Todo was removed',
+  UPDATE_TODO: 'Todo title updated',
+} as const;

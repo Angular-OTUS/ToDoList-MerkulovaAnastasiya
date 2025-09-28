@@ -1,0 +1,13 @@
+<div class="toast-container">
+  @for (toast of toasts(); track toast.id) {
+  <div class="toast" [ngClass]="'toast-' + toast.variant">
+    <div class="toast-content">
+      <mat-icon class="toast-icon">{{ toastIcons[toast.variant] }}</mat-icon>
+      <span class="toast-message">{{ toast.message }}</span>
+    </div>
+    <button matIconButton class="toast-close-btn" (click)="removeToast(toast.id)">
+      <mat-icon>close_small</mat-icon>
+    </button>
+  </div>
+  }
+</div>

@@ -16,7 +16,9 @@ import { ITodoItem } from '../../shared/types/todo-item.interface';
 import { Loader } from '../../shared/ui/loader/loader';
 import { TodoForm } from '../todo-form/todo-form';
 import { TodoListItem } from './todo-list-item/todo-list-item';
-import { EditTodoDto } from '../../shared/types/todo.dto';
+import { EditTodoDto } from '../../shared/types/dto/todo.dto';
+import { ToastService } from '../../services/toast/toast';
+import { TOAST_TEXT } from '../../shared/util/constants';
 
 @Component({
   selector: 'app-todo-list',
@@ -27,6 +29,7 @@ import { EditTodoDto } from '../../shared/types/todo.dto';
 export class TodoList implements OnInit, OnDestroy {
   private timeoutId?: number;
   private readonly todosDataService: TodosDataService = inject(TodosDataService);
+  private readonly toastService: ToastService = inject(ToastService);
 
   protected todos: WritableSignal<ITodoItem[]> = signal<ITodoItem[]>(
     this.todosDataService.getAllTodos()
@@ -62,6 +65,11 @@ export class TodoList implements OnInit, OnDestroy {
     }
   }
 
+  private cleanForm(): void {
+    this.newTodoText.set('');
+    this.newTodoDescription.set('');
+  }
+
   public addNewTodo(): void {
     if (this.isSubmitDisabled()) return;
 
@@ -73,8 +81,11 @@ export class TodoList implements OnInit, OnDestroy {
     this.todosDataService.addNewTodo(todoData);
     this.todos.set(this.todosDataService.getAllTodos());
 
-    this.newTodoText.set('');
-    this.newTodoDescription.set('');
+    this.cleanForm();
+    this.toastService.addToast({
+      variant: 'success',
+      message: TOAST_TEXT.ADD_TODO,
+    });
   }
 
   public selectTodoId(id: number): void {
@@ -83,6 +94,10 @@ export class TodoList implements OnInit, OnDestroy {
 
   public updateTodo(data: EditTodoDto): void {
     this.todosDataService.editTodo(data);
+    this.toastService.addToast({
+      variant: 'success',
+      message: TOAST_TEXT.UPDATE_TODO,
+    });
   }
 
   public deleteTodoById(id: number): void {
@@ -91,5 +106,9 @@ export class TodoList implements OnInit, OnDestroy {
     }
     this.todosDataService.removeTodo(id);
     this.todos.set(this.todosDataService.getAllTodos());
+    this.toastService.addToast({
+      variant: 'error',
+      message: TOAST_TEXT.DELETE_TODO,
+    });
   }
 }

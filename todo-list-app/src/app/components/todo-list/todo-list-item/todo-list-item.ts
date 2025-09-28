@@ -16,8 +16,8 @@ import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ShowTooltip } from '../../../shared/directives/show-tooltip';
+import { EditTodoDto } from '../../../shared/types/dto/todo.dto';
 import { ITodoItem } from '../../../shared/types/todo-item.interface';
-import { EditTodoDto } from '../../../shared/types/todo.dto';
 import { Button } from '../../../shared/ui/button/button';
 import { TOOLTIP_TEXT } from '../../../shared/util/constants';
 

@@ -1,6 +1,7 @@
 import {
   Component,
   computed,
+  inject,
   OnDestroy,
   OnInit,
   Signal,
@@ -10,12 +11,14 @@ import {
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { TodosDataService } from '../../services/todos-data/todos-data';
 import { ITodoItem } from '../../shared/types/todo-item.interface';
 import { Loader } from '../../shared/ui/loader/loader';
-import { generateTodoId } from '../../shared/util/helpers';
 import { TodoForm } from '../todo-form/todo-form';
 import { TodoListItem } from './todo-list-item/todo-list-item';
-import { INITIAL_TODOS } from './todo-list.config';
+import { EditTodoDto } from '../../shared/types/dto/todo.dto';
+import { ToastService } from '../../services/toast/toast';
+import { TOAST_TEXT, TOAST_VARIANT } from '../../shared/util/constants';
 
 @Component({
   selector: 'app-todo-list',
@@ -25,18 +28,24 @@ import { INITIAL_TODOS } from './todo-list.config';
 })
 export class TodoList implements OnInit, OnDestroy {
   private timeoutId?: number;
-  protected todos: WritableSignal<ITodoItem[]> = signal<ITodoItem[]>(INITIAL_TODOS);
+  private readonly todosDataService: TodosDataService = inject(TodosDataService);
+  private readonly toastService: ToastService = inject(ToastService);
 
+  protected todos: WritableSignal<ITodoItem[]> = signal<ITodoItem[]>(
+    this.todosDataService.getAllTodos()
+  );
   public newTodoText: WritableSignal<string> = signal<string>('');
   public newTodoDescription: WritableSignal<string> = signal<string>('');
 
   public selectedItemId: WritableSignal<number | null> = signal<number | null>(null);
+  public editingItemId: WritableSignal<number | null> = signal<number | null>(null);
 
   public currentDescription = computed(() => {
     const selectedId = this.selectedItemId();
     if (!selectedId) return null;
 
-    const todo = this.todos().find((t) => t.id === selectedId);
+    const todo = this.todosDataService.getTodoById(selectedId);
+
     return todo ? todo.description : null;
   });
 
@@ -57,27 +66,59 @@ export class TodoList implements OnInit, OnDestroy {
     }
   }
 
+  private cleanForm(): void {
+    this.newTodoText.set('');
+    this.newTodoDescription.set('');
+  }
+
+   public openEditing(id: number): void {
+    this.editingItemId.set(id);
+  }
+
+  public closeEditing(): void {
+    this.editingItemId.set(null);
+  }
+
   public addNewTodo(): void {
     if (this.isSubmitDisabled()) return;
 
-    this.todos.update((currentTodos) => [
-      ...currentTodos,
-      {
-        id: generateTodoId(this.todos()),
-        text: this.newTodoText(),
-        description: this.newTodoDescription(),
-      },
-    ]);
+    const todoData = {
+      text: this.newTodoText(),
+      description: this.newTodoDescription(),
+    };
 
-    this.newTodoText.set('');
-    this.newTodoDescription.set('');
+    this.todosDataService.addNewTodo(todoData);
+    this.todos.set(this.todosDataService.getAllTodos());
+
+    this.cleanForm();
+    this.toastService.addToast({
+      variant:  TOAST_VARIANT.SUCCESS,
+      message: TOAST_TEXT.ADD_TODO,
+    });
   }
 
   public selectTodoId(id: number): void {
     this.selectedItemId.set(id);
   }
 
+  public updateTodo(data: EditTodoDto): void {
+    this.todosDataService.editTodo(data);
+    this.closeEditing();
+    this.toastService.addToast({
+      variant: TOAST_VARIANT.SUCCESS,
+      message: TOAST_TEXT.UPDATE_TODO,
+    });
+  }
+
   public deleteTodoById(id: number): void {
-    this.todos.update((currentTodos) => [...currentTodos.filter((todo) => todo.id !== id)]);
+    if (this.selectedItemId() === id) {
+      this.selectedItemId.set(null);
+    }
+    this.todosDataService.removeTodo(id);
+    this.todos.set(this.todosDataService.getAllTodos());
+    this.toastService.addToast({
+      variant: TOAST_VARIANT.ERROR,
+      message: TOAST_TEXT.DELETE_TODO,
+    });
   }
 }

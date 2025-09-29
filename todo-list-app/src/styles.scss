@@ -33,7 +33,7 @@ button {
   border: none;
   border-radius: 8px;
   &:hover {
-    filter: contrast(2);
+    filter: contrast(1.5);
   }
   &:disabled {
     opacity: 0.5;

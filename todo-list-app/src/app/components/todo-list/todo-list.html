@@ -9,8 +9,12 @@
       <app-todo-list-item
         [currentTodo]="todo"
         [selectedId]="selectedItemId()"
+        [editingId]="editingItemId()"
         (removeCurrentTodo)="deleteTodoById($event)"
         (clickCurrentTodo)="selectTodoId($event)"
+        (updateCurrentTodo)="updateTodo($event)"
+        (openEditing)="openEditing($event)"
+        (closeEditing)="closeEditing()"
       ></app-todo-list-item>
       } @empty {
       <li>There are no items. Type new task.</li>

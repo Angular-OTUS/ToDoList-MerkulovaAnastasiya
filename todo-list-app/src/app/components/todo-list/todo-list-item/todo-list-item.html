@@ -4,15 +4,48 @@
   (click)="handleTodoClick(currentTodo().id)"
   [ngClass]="{ selected: isSelected() }"
 >
-  <span class="todo-text" appShowTooltip [tooltipText]="TOOLTIP_TEXT.LIST_ITEM">{{
-    currentTodo().text
-  }}</span>
-  <app-button
-    type="delete"
-    title="Delete"
-    (action)="handleRemoveTodo(currentTodo().id)"
-    appShowTooltip
-    [tooltipText]="TOOLTIP_TEXT.DELETE_BUTTON"
-  ></app-button>
+  <ng-container [ngTemplateOutlet]="isEditing() ? editTemplate : viewTemplate"></ng-container>
 </li>
 }
+
+<!-- Шаблон для просмотра todo-->
+<ng-template #viewTemplate>
+  <span
+    class="todo-text"
+    appShowTooltip
+    [tooltipText]="TOOLTIP_TEXT.LIST_ITEM"
+    (dblclick)="handleOpenEditing($event)"
+    >{{ currentTodo().text }}</span
+  >
+  <app-button
+    type="delete"
+    (action)="handleRemoveTodo($event, currentTodo().id)"
+    appShowTooltip
+    [tooltipText]="TOOLTIP_TEXT.DELETE_BUTTON"
+    >Delete</app-button
+  >
+</ng-template>
+
+<!-- Шаблон для редактирования todo-->
+<ng-template #editTemplate>
+  <mat-form-field class="form-input-wrapper" subscriptSizing="dynamic">
+    <input
+      #editInput
+      type="text"
+      matInput
+      placeholder="Todo title"
+      [(ngModel)]="newTitle"
+      maxlength="45"
+      (keydown)="handleKeydownPress($event)"
+    />
+  </mat-form-field>
+
+  <app-button
+    type="submit"
+    (action)="handleUpdateTodo($event)"
+    appShowTooltip
+    [tooltipText]="TOOLTIP_TEXT.SAVE_TITLE"
+    [isDisabled]="isSubmitDisabled()"
+    >Save</app-button
+  >
+</ng-template>

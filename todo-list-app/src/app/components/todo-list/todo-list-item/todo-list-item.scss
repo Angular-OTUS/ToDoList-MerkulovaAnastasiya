@@ -1,3 +1,5 @@
+@use '@angular/material' as mat;
+
 .todo-item {
   display: flex;
   justify-content: space-between;
@@ -6,11 +8,25 @@
   background-color: var(--mat-sys-tertiary-container);
   border-radius: 6px;
   padding-inline: 18px;
+  padding-block: 6px;
   &:hover {
     color: inherit;
     background-color: var(--mat-sys-inverse-on-surface);
     cursor: pointer;
   }
+}
+
+.form-input-wrapper {
+  width: 100%;
+  font-size: 14px;
+  padding-block: 10px;
+
+  @include mat.form-field-overrides(
+    (
+      container-height: 40px,
+      container-vertical-padding: 8px,
+    )
+  );
 }
 
 .selected {
@@ -21,4 +37,5 @@
 .todo-text {
   width: 100%;
   padding-block: 14px;
+  word-break: break-all;
 }

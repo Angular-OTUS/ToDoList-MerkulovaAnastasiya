@@ -15,8 +15,7 @@ export class TodosDataService {
   }
 
   public editTodo(todo: EditTodoDto): void {
-    const todoId = this.todos.findIndex((item) => item.id === todo.id);
-    this.todos[todoId] = todo;
+    this.todos[this.todos.findIndex((item) => item.id === todo.id)] = todo;
   }
 
   public removeTodo(id: number): void {

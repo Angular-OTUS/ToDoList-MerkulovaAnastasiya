@@ -1,8 +1,8 @@
-import { Component, computed, inject, signal, WritableSignal } from '@angular/core';
-import { ToastService } from '../../services/toast/toast';
-import { MatIcon } from '@angular/material/icon';
-import { IToast } from '../../shared/types/toast.interface';
 import { CommonModule } from '@angular/common';
+import { Component, computed, inject } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+import { ToastService } from '../../services/toast/toast';
+import { TOAST_ICONS } from '../../shared/util/constants';
 
 @Component({
   selector: 'app-toast-container',
@@ -12,10 +12,7 @@ import { CommonModule } from '@angular/common';
 })
 export class ToastContainer {
   private toastService = inject(ToastService);
-  protected readonly toastIcons = {
-    error: 'error',
-    success: 'check_circle',
-  };
+  protected readonly toastIcons = TOAST_ICONS
 
   protected toasts = computed(() => this.toastService.allToasts());
 

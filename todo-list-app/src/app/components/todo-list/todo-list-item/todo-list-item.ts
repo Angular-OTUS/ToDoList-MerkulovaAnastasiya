@@ -29,40 +29,43 @@ import { TOOLTIP_TEXT } from '../../../shared/util/constants';
 })
 export class TodoListItem {
   protected TOOLTIP_TEXT = TOOLTIP_TEXT;
-  protected isEditing = false;
 
   public currentTodo: InputSignal<ITodoItem> = input.required<ITodoItem>();
   public selectedId: InputSignal<number | null> = input<number | null>(null);
+  public editingId: InputSignal<number | null> = input<number | null>(null);
 
   public updateCurrentTodo: OutputEmitterRef<EditTodoDto> = output<EditTodoDto>();
   public removeCurrentTodo: OutputEmitterRef<number> = output<number>();
   public clickCurrentTodo: OutputEmitterRef<number> = output<number>();
+  public openEditing: OutputEmitterRef<number> = output<number>();
+  public closeEditing: OutputEmitterRef<void> = output<void>();
 
   public newTitle: WritableSignal<string> = signal<string>('');
   public isSelected: Signal<boolean> = computed(() => this.selectedId() === this.currentTodo().id);
+  public isEditing: Signal<boolean> = computed(() => this.editingId() === this.currentTodo().id);
   public isSubmitDisabled: Signal<boolean> = computed(() => !this.newTitle().trim());
 
   @ViewChild('editInput') set editInputRef(ref: ElementRef<HTMLInputElement>) {
-    if (ref && this.isEditing) {
+    if (ref && this.isEditing()) {
       ref.nativeElement.focus();
     }
   }
 
-  public openEditing(e: Event) {
+  public handleOpenEditing(e: Event) {
     e.stopPropagation();
-    this.isEditing = true;
+    this.openEditing.emit(this.currentTodo().id);
     this.newTitle.set(this.currentTodo().text);
   }
 
-  public closeEditing() {
-    this.isEditing = false;
+  public handleCloseEditing() {
     this.newTitle.set('');
+    this.closeEditing.emit();
   }
 
   public handleUpdateTodo(e: Event) {
     e.stopPropagation();
     this.updateCurrentTodo.emit({ ...this.currentTodo(), text: this.newTitle() });
-    this.closeEditing();
+    this.handleCloseEditing();
   }
 
   public handleRemoveTodo(e: Event, id: number) {
@@ -75,10 +78,15 @@ export class TodoListItem {
   }
 
   public handleKeydownPress(event: KeyboardEvent) {
-    if (event.key === 'Enter') {
-      this.handleUpdateTodo(event);
-    } else if (event.key === 'Escape') {
-      this.closeEditing();
+    switch (event.key) {
+      case 'Enter':
+        this.handleUpdateTodo(event);
+        break;
+      case 'Escape':
+        this.handleCloseEditing();
+        break;
+      default:
+        break;
     }
   }
 }

@@ -4,7 +4,7 @@
   (click)="handleTodoClick(currentTodo().id)"
   [ngClass]="{ selected: isSelected() }"
 >
-  <ng-container [ngTemplateOutlet]="isEditing ? editTemplate : viewTemplate"></ng-container>
+  <ng-container [ngTemplateOutlet]="isEditing() ? editTemplate : viewTemplate"></ng-container>
 </li>
 }
 
@@ -14,7 +14,7 @@
     class="todo-text"
     appShowTooltip
     [tooltipText]="TOOLTIP_TEXT.LIST_ITEM"
-    (dblclick)="openEditing($event)"
+    (dblclick)="handleOpenEditing($event)"
     >{{ currentTodo().text }}</span
   >
   <app-button

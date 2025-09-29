@@ -18,7 +18,7 @@ import { TodoForm } from '../todo-form/todo-form';
 import { TodoListItem } from './todo-list-item/todo-list-item';
 import { EditTodoDto } from '../../shared/types/dto/todo.dto';
 import { ToastService } from '../../services/toast/toast';
-import { TOAST_TEXT } from '../../shared/util/constants';
+import { TOAST_TEXT, TOAST_VARIANT } from '../../shared/util/constants';
 
 @Component({
   selector: 'app-todo-list',
@@ -38,6 +38,7 @@ export class TodoList implements OnInit, OnDestroy {
   public newTodoDescription: WritableSignal<string> = signal<string>('');
 
   public selectedItemId: WritableSignal<number | null> = signal<number | null>(null);
+  public editingItemId: WritableSignal<number | null> = signal<number | null>(null);
 
   public currentDescription = computed(() => {
     const selectedId = this.selectedItemId();
@@ -70,6 +71,14 @@ export class TodoList implements OnInit, OnDestroy {
     this.newTodoDescription.set('');
   }
 
+   public openEditing(id: number): void {
+    this.editingItemId.set(id);
+  }
+
+  public closeEditing(): void {
+    this.editingItemId.set(null);
+  }
+
   public addNewTodo(): void {
     if (this.isSubmitDisabled()) return;
 
@@ -83,7 +92,7 @@ export class TodoList implements OnInit, OnDestroy {
 
     this.cleanForm();
     this.toastService.addToast({
-      variant: 'success',
+      variant:  TOAST_VARIANT.SUCCESS,
       message: TOAST_TEXT.ADD_TODO,
     });
   }
@@ -94,8 +103,9 @@ export class TodoList implements OnInit, OnDestroy {
 
   public updateTodo(data: EditTodoDto): void {
     this.todosDataService.editTodo(data);
+    this.closeEditing();
     this.toastService.addToast({
-      variant: 'success',
+      variant: TOAST_VARIANT.SUCCESS,
       message: TOAST_TEXT.UPDATE_TODO,
     });
   }
@@ -107,7 +117,7 @@ export class TodoList implements OnInit, OnDestroy {
     this.todosDataService.removeTodo(id);
     this.todos.set(this.todosDataService.getAllTodos());
     this.toastService.addToast({
-      variant: 'error',
+      variant: TOAST_VARIANT.ERROR,
       message: TOAST_TEXT.DELETE_TODO,
     });
   }

@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { TodosData } from './todos-data';
+import { TodosDataService } from './todos-data';
 
 describe('TodosData', () => {
-  let service: TodosData;
+  let service: TodosDataService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(TodosData);
+    service = TestBed.inject(TodosDataService);
   });
 
   it('should be created', () => {

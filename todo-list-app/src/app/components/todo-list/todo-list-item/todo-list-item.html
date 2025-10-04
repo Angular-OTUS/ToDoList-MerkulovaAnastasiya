@@ -1,9 +1,15 @@
 @if (currentTodo()) {
 <li
   class="todo-item"
+  [class.completed]="isCompleted()"
   (click)="handleTodoClick(currentTodo().id)"
   [ngClass]="{ selected: isSelected() }"
 >
+  <mat-checkbox
+    [checked]="isCompleted()"
+    (change)="onCheckboxChange($event)"
+    (click)="$event.stopPropagation()"
+  />
   <ng-container [ngTemplateOutlet]="isEditing() ? editTemplate : viewTemplate"></ng-container>
 </li>
 }

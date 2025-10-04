@@ -19,10 +19,19 @@ import { TodoListItem } from './todo-list-item/todo-list-item';
 import { EditTodoDto } from '../../shared/types/dto/todo.dto';
 import { ToastService } from '../../services/toast/toast';
 import { TOAST_TEXT, TOAST_VARIANT } from '../../shared/util/constants';
+import { TodoFilter } from '../todo-filter/todo-filter';
 
 @Component({
   selector: 'app-todo-list',
-  imports: [TodoListItem, FormsModule, MatFormFieldModule, MatInputModule, Loader, TodoForm],
+  imports: [
+    TodoListItem,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    Loader,
+    TodoForm,
+    TodoFilter,
+  ],
   templateUrl: './todo-list.html',
   styleUrl: './todo-list.scss',
 })
@@ -39,6 +48,18 @@ export class TodoList implements OnInit, OnDestroy {
 
   public selectedItemId: WritableSignal<number | null> = signal<number | null>(null);
   public editingItemId: WritableSignal<number | null> = signal<number | null>(null);
+
+  public filterValue: WritableSignal<string | null> = signal<string | null>(null);
+  public filteredTodos: Signal<ITodoItem[]> = computed(() => {
+    const filter = this.filterValue();
+    const allTodos = this.todos();
+
+    if (!filter) {
+      return allTodos;
+    }
+
+    return allTodos.filter((todo) => todo.status === filter);
+  });
 
   public currentDescription = computed(() => {
     const selectedId = this.selectedItemId();
@@ -71,7 +92,7 @@ export class TodoList implements OnInit, OnDestroy {
     this.newTodoDescription.set('');
   }
 
-   public openEditing(id: number): void {
+  public openEditing(id: number): void {
     this.editingItemId.set(id);
   }
 
@@ -92,7 +113,7 @@ export class TodoList implements OnInit, OnDestroy {
 
     this.cleanForm();
     this.toastService.addToast({
-      variant:  TOAST_VARIANT.SUCCESS,
+      variant: TOAST_VARIANT.SUCCESS,
       message: TOAST_TEXT.ADD_TODO,
     });
   }
@@ -120,5 +141,10 @@ export class TodoList implements OnInit, OnDestroy {
       variant: TOAST_VARIANT.ERROR,
       message: TOAST_TEXT.DELETE_TODO,
     });
+  }
+
+    public onFilterChange(value: string | null): void {
+    this.filterValue.set(value);
+    this.selectedItemId.set(null);
   }
 }

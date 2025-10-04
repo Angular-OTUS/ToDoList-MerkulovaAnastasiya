@@ -3,6 +3,7 @@ import { AddTodoDto, EditTodoDto } from '../../shared/types/dto/todo.dto';
 import { ITodoItem } from '../../shared/types/todo-item.interface';
 import { generateNextId } from '../../shared/util/helpers';
 import { INITIAL_TODOS } from './todo-list.config';
+import { TODO_STATUS } from '../../shared/util/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,7 @@ export class TodosDataService {
   private todos: ITodoItem[] = INITIAL_TODOS;
 
   public addNewTodo(newTodo: AddTodoDto): void {
-    this.todos = [...this.todos, { ...newTodo, id: generateNextId(this.todos) }];
+    this.todos = [...this.todos, { ...newTodo, id: generateNextId(this.todos), status:TODO_STATUS.INPROGRESS }];
   }
 
   public editTodo(todo: EditTodoDto): void {

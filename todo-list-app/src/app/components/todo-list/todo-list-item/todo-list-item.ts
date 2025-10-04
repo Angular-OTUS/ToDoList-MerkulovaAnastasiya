@@ -13,17 +13,26 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ShowTooltip } from '../../../shared/directives/show-tooltip';
 import { EditTodoDto } from '../../../shared/types/dto/todo.dto';
 import { ITodoItem } from '../../../shared/types/todo-item.interface';
 import { Button } from '../../../shared/ui/button/button';
-import { TOOLTIP_TEXT } from '../../../shared/util/constants';
+import { TODO_STATUS, TOOLTIP_TEXT } from '../../../shared/util/constants';
 
 @Component({
   selector: 'app-todo-list-item',
-  imports: [Button, CommonModule, ShowTooltip, MatFormFieldModule, MatInputModule, FormsModule],
+  imports: [
+    Button,
+    CommonModule,
+    ShowTooltip,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    MatCheckboxModule,
+  ],
   templateUrl: './todo-list-item.html',
   styleUrl: './todo-list-item.scss',
 })
@@ -44,7 +53,9 @@ export class TodoListItem {
   public isSelected: Signal<boolean> = computed(() => this.selectedId() === this.currentTodo().id);
   public isEditing: Signal<boolean> = computed(() => this.editingId() === this.currentTodo().id);
   public isSubmitDisabled: Signal<boolean> = computed(() => !this.newTitle().trim());
-
+  public isCompleted: Signal<boolean> = computed(
+    () => this.currentTodo().status === TODO_STATUS.COMPLETED
+  );
   @ViewChild('editInput') set editInputRef(ref: ElementRef<HTMLInputElement>) {
     if (ref && this.isEditing()) {
       ref.nativeElement.focus();
@@ -75,6 +86,13 @@ export class TodoListItem {
 
   public handleTodoClick(id: number) {
     this.clickCurrentTodo.emit(id);
+  }
+
+  public onCheckboxChange(e: MatCheckboxChange) {
+    this.updateCurrentTodo.emit({
+      ...this.currentTodo(),
+      status: e.checked ? TODO_STATUS.COMPLETED : TODO_STATUS.INPROGRESS,
+    });
   }
 
   public handleKeydownPress(event: KeyboardEvent) {

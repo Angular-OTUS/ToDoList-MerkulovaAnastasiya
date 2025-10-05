@@ -1,10 +1,14 @@
 @use '@angular/material' as mat;
 
-.todo-item {
+.todo-item,
+.todo-item-form {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 10px;
+}
+
+.todo-item {
   background-color: var(--mat-sys-tertiary-container);
   border-radius: 6px;
   padding-inline: 18px;
@@ -19,7 +23,9 @@
     outline-offset: -2px;
   }
   &.completed {
-    text-decoration: line-through;
+    & > .todo-text {
+      text-decoration: line-through;
+    }
     &:not(.selected) {
       background-color: var(--mat-sys-outline-variant);
     }

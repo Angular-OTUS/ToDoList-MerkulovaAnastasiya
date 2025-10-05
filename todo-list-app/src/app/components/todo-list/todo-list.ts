@@ -8,12 +8,9 @@ import {
   signal,
   WritableSignal,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { of, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { TodosApi } from '../../services/todos-api/todos-api';
 import { AddTodoDto, EditTodoDto } from '../../shared/types/dto/todo.dto';
 import { ITodoItem } from '../../shared/types/todo-item.interface';
@@ -24,15 +21,7 @@ import { TodoListItem } from './todo-list-item/todo-list-item';
 
 @Component({
   selector: 'app-todo-list',
-  imports: [
-    TodoListItem,
-    FormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    Loader,
-    TodoForm,
-    TodoFilter,
-  ],
+  imports: [TodoListItem, Loader, TodoForm, TodoFilter],
   templateUrl: './todo-list.html',
   styleUrl: './todo-list.scss',
 })
@@ -42,12 +31,6 @@ export class TodoList implements OnInit, OnDestroy {
 
   protected todos: WritableSignal<ITodoItem[]> = signal([]);
   protected isLoading: WritableSignal<boolean> = signal(true);
-
-  protected newTodoText: WritableSignal<string> = signal('');
-  protected newTodoDescription: WritableSignal<string> = signal('');
-  protected isSubmitDisabled: Signal<boolean> = computed(
-    () => !this.newTodoText().trim() && !this.newTodoDescription().trim(),
-  );
 
   protected selectedItemId: WritableSignal<string | null> = signal(null);
   protected editingItemId: WritableSignal<string | null> = signal(null);
@@ -64,16 +47,12 @@ export class TodoList implements OnInit, OnDestroy {
     return [...this.todos()].filter((todo) => todo.status === filter);
   });
 
-  private selectedId$ = toObservable(this.selectedItemId).pipe(
-    takeUntil(this.destroy$),
-  );
+  private selectedId$ = toObservable(this.selectedItemId).pipe(takeUntil(this.destroy$));
 
   protected selectedTodo = toSignal(
     this.selectedId$.pipe(
       switchMap((selectedId) =>
-        selectedId
-          ? this.todosApiService.getTodoById(selectedId)
-          : of(null),
+        selectedId ? this.todosApiService.getTodoById(selectedId) : of(null),
       ),
     ),
     { initialValue: null },
@@ -101,11 +80,6 @@ export class TodoList implements OnInit, OnDestroy {
       });
   }
 
-  private cleanAddTodoForm(): void {
-    this.newTodoText.set('');
-    this.newTodoDescription.set('');
-  }
-
   protected openEditing(id: string): void {
     this.editingItemId.set(id);
   }
@@ -123,21 +97,14 @@ export class TodoList implements OnInit, OnDestroy {
     this.selectedItemId.set(null);
   }
 
-  protected addNewTodo(): void {
-    if (this.isSubmitDisabled()) return;
-
-    const todoData: AddTodoDto = {
-      text: this.newTodoText(),
-      description: this.newTodoDescription(),
-    };
-
+  protected addNewTodo(todoData: AddTodoDto): void {
+    if (!todoData.text.trim() && !todoData.description.trim()) return;
     this.todosApiService
       .addNewTodo(todoData)
       .pipe(takeUntil(this.destroy$))
       .subscribe((newTodo) => {
         if (newTodo) {
           this.todos.update((currentTodos) => [...currentTodos, newTodo]);
-          this.cleanAddTodoForm();
         }
       });
   }
@@ -149,9 +116,7 @@ export class TodoList implements OnInit, OnDestroy {
       .subscribe((updatedTodo) => {
         if (updatedTodo) {
           this.todos.update((currentTodos) =>
-            currentTodos.map((todo) =>
-              todo.id === updatedTodo.id ? updatedTodo : todo,
-            ),
+            currentTodos.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo)),
           );
           this.closeEditing();
         }
@@ -167,9 +132,7 @@ export class TodoList implements OnInit, OnDestroy {
       .removeTodo(id)
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-        this.todos.update((currentTodos) =>
-          currentTodos.filter((todo) => todo.id !== id),
-        );
+        this.todos.update((currentTodos) => currentTodos.filter((todo) => todo.id !== id));
       });
   }
 }

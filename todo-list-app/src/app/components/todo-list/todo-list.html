@@ -33,10 +33,5 @@
       }
     </div>
   </div>
-  <app-todo-form
-    [(newTodoText)]="newTodoText"
-    [(newTodoDescription)]="newTodoDescription"
-    [isSubmitDisabled]="isSubmitDisabled()"
-    (addTodo)="addNewTodo()"
-  ></app-todo-form>
+  <app-todo-form (formSubmitted)="addNewTodo($event)"></app-todo-form>
 </div>

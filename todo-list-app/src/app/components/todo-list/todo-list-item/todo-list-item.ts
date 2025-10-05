@@ -3,16 +3,15 @@ import {
   Component,
   computed,
   ElementRef,
+  inject,
   input,
   InputSignal,
   output,
   OutputEmitterRef,
-  signal,
   Signal,
   ViewChild,
-  WritableSignal,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -21,6 +20,8 @@ import { EditTodoDto } from '../../../shared/types/dto/todo.dto';
 import { ITodoItem } from '../../../shared/types/todo-item.interface';
 import { Button } from '../../../shared/ui/button/button';
 import { TODO_STATUS, TOOLTIP_TEXT } from '../../../shared/util/constants';
+import { trimmedMinLength } from '../../../shared/validators/trimmed-minlength.validator';
+import { ValidatorErrorMessage } from '../../../services/validator-error-message/validator-error-message';
 
 @Component({
   selector: 'app-todo-list-item',
@@ -30,13 +31,15 @@ import { TODO_STATUS, TOOLTIP_TEXT } from '../../../shared/util/constants';
     ShowTooltip,
     MatFormFieldModule,
     MatInputModule,
-    FormsModule,
     MatCheckboxModule,
+    ReactiveFormsModule,
   ],
   templateUrl: './todo-list-item.html',
   styleUrl: './todo-list-item.scss',
 })
 export class TodoListItem {
+  private readonly formBuilder: NonNullableFormBuilder = inject(NonNullableFormBuilder);
+  protected readonly errorService: ValidatorErrorMessage = inject(ValidatorErrorMessage);
   protected TOOLTIP_TEXT = TOOLTIP_TEXT;
 
   public currentTodo: InputSignal<ITodoItem> = input.required<ITodoItem>();
@@ -49,10 +52,19 @@ export class TodoListItem {
   protected openEditing: OutputEmitterRef<string> = output<string>();
   protected closeEditing: OutputEmitterRef<void> = output<void>();
 
-  protected newTitle: WritableSignal<string> = signal<string>('');
-  protected isSelected: Signal<boolean> = computed(() => this.selectedId() === this.currentTodo().id);
+  protected editTodoForm = this.formBuilder.group({
+    text: this.formBuilder.control<string>('', [
+      Validators.required,
+      trimmedMinLength(3),
+      Validators.maxLength(45),
+    ]),
+  });
+
+  protected isSelected: Signal<boolean> = computed(
+    () => this.selectedId() === this.currentTodo().id,
+  );
   protected isEditing: Signal<boolean> = computed(() => this.editingId() === this.currentTodo().id);
-  protected isSubmitDisabled: Signal<boolean> = computed(() => !this.newTitle().trim());
+
   protected isCompleted: Signal<boolean> = computed(
     () => this.currentTodo().status === TODO_STATUS.COMPLETED,
   );
@@ -65,18 +77,23 @@ export class TodoListItem {
   protected handleOpenEditing(e: Event) {
     e.stopPropagation();
     this.openEditing.emit(this.currentTodo().id);
-    this.newTitle.set(this.currentTodo().text);
+    this.editTodoForm.controls.text.setValue(this.currentTodo().text);
   }
 
   protected handleCloseEditing() {
-    this.newTitle.set('');
+    this.editTodoForm.reset();
     this.closeEditing.emit();
   }
 
   protected handleUpdateTodo(e: Event) {
     e.stopPropagation();
-    this.updateCurrentTodo.emit({ ...this.currentTodo(), text: this.newTitle() });
-    this.handleCloseEditing();
+    if (this.editTodoForm.valid) {
+      this.updateCurrentTodo.emit({
+        ...this.currentTodo(),
+        text: this.editTodoForm.controls.text.value,
+      });
+      this.handleCloseEditing();
+    }
   }
 
   protected handleRemoveTodo(e: Event, id: string) {

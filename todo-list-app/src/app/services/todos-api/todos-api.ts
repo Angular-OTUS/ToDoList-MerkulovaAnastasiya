@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, Observable, of, tap } from 'rxjs';
 import { environment } from '../../../environments/environment.development';
@@ -23,7 +23,7 @@ export class TodosApi {
   }
 
   private handleError<T>(message: string, result?: T) {
-    return (error: any): Observable<T> => {
+    return (error: HttpErrorResponse): Observable<T> => {
       console.error(message, error);
       this.toastService.addToast({
         variant: TOAST_VARIANT.ERROR,
@@ -38,21 +38,21 @@ export class TodosApi {
       .post<ITodoItem>(this.baseUrl, { ...newTodo, status: TODO_STATUS.INPROGRESS })
       .pipe(
         tap(() => this.handleSuccess(TOAST_TEXT.ADD_TODO)),
-        catchError(this.handleError<ITodoItem | null>(TOAST_TEXT.ERROR_TODO, null))
+        catchError(this.handleError<ITodoItem | null>(TOAST_TEXT.ERROR_TODO, null)),
       );
   }
 
   public editTodo(todo: EditTodoDto): Observable<ITodoItem | null> {
     return this.http.put<ITodoItem>(`${this.baseUrl}/${todo.id}`, todo).pipe(
       tap(() => this.handleSuccess(TOAST_TEXT.UPDATE_TODO)),
-      catchError(this.handleError<ITodoItem | null>(TOAST_TEXT.ERROR_TODO, null))
+      catchError(this.handleError<ITodoItem | null>(TOAST_TEXT.ERROR_TODO, null)),
     );
   }
 
   public removeTodo(id: string): Observable<unknown | null> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`).pipe(
       tap(() => this.handleSuccess(TOAST_TEXT.DELETE_TODO)),
-      catchError(this.handleError<null>(TOAST_TEXT.ERROR_TODO, null))
+      catchError(this.handleError<null>(TOAST_TEXT.ERROR_TODO, null)),
     );
   }
 
@@ -64,7 +64,7 @@ export class TodosApi {
 
   public getAllTodos(): Observable<ITodoItem[]> {
     return this.http.get<ITodoItem[]>(this.baseUrl).pipe(
-      catchError(this.handleError<ITodoItem[]>(TOAST_TEXT.ERROR_TODOS, []))
+      catchError(this.handleError<ITodoItem[]>(TOAST_TEXT.ERROR_TODOS, [])),
     );
   }
 }

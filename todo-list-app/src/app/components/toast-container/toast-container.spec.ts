@@ -8,7 +8,7 @@ describe('ToastContainer', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ToastContainer]
+      imports: [ToastContainer],
     })
     .compileComponents();
 

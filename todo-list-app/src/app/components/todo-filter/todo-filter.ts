@@ -5,10 +5,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { DEFAULT_FILTER_STATUS, TODO_STATUS } from '../../shared/util/constants';
 
-type TFilterOptions = {
+interface TFilterOptions {
   label: string;
   value: string | null;
-};
+}
 
 @Component({
   selector: 'app-todo-filter',

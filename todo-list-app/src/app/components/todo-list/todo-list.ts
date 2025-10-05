@@ -46,7 +46,7 @@ export class TodoList implements OnInit, OnDestroy {
   protected newTodoText: WritableSignal<string> = signal('');
   protected newTodoDescription: WritableSignal<string> = signal('');
   protected isSubmitDisabled: Signal<boolean> = computed(
-    () => !this.newTodoText().trim() && !this.newTodoDescription().trim()
+    () => !this.newTodoText().trim() && !this.newTodoDescription().trim(),
   );
 
   protected selectedItemId: WritableSignal<string | null> = signal(null);
@@ -65,7 +65,7 @@ export class TodoList implements OnInit, OnDestroy {
   });
 
   private selectedId$ = toObservable(this.selectedItemId).pipe(
-    takeUntil(this.destroy$)
+    takeUntil(this.destroy$),
   );
 
   protected selectedTodo = toSignal(
@@ -73,10 +73,10 @@ export class TodoList implements OnInit, OnDestroy {
       switchMap((selectedId) =>
         selectedId
           ? this.todosApiService.getTodoById(selectedId)
-          : of(null)
-      )
+          : of(null),
+      ),
     ),
-    { initialValue: null }
+    { initialValue: null },
   );
 
   protected currentDescription = computed(() => this.selectedTodo()?.description || null);
@@ -150,8 +150,8 @@ export class TodoList implements OnInit, OnDestroy {
         if (updatedTodo) {
           this.todos.update((currentTodos) =>
             currentTodos.map((todo) =>
-              todo.id === updatedTodo.id ? updatedTodo : todo
-            )
+              todo.id === updatedTodo.id ? updatedTodo : todo,
+            ),
           );
           this.closeEditing();
         }
@@ -168,7 +168,7 @@ export class TodoList implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.todos.update((currentTodos) =>
-          currentTodos.filter((todo) => todo.id !== id)
+          currentTodos.filter((todo) => todo.id !== id),
         );
       });
   }

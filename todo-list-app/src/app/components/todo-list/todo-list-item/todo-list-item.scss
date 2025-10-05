@@ -14,11 +14,19 @@
     background-color: var(--mat-sys-inverse-on-surface);
     cursor: pointer;
   }
+  &:focus {
+    outline: 2px solid var(--mat-sys-outline);
+    outline-offset: -2px;
+  }
   &.completed {
     text-decoration: line-through;
     &:not(.selected) {
       background-color: var(--mat-sys-outline-variant);
     }
+  }
+  &.selected {
+    color: var(--mat-sys-inverse-on-surface);
+    background-color: var(--mat-sys-on-primary-fixed);
   }
 }
 
@@ -33,11 +41,6 @@
       container-vertical-padding: 8px,
     )
   );
-}
-
-.selected {
-  color: var(--mat-sys-inverse-on-surface);
-  background-color: var(--mat-sys-on-primary-fixed);
 }
 
 .todo-text {

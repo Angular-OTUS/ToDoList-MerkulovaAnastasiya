@@ -54,7 +54,7 @@ export class TodoListItem {
   protected isEditing: Signal<boolean> = computed(() => this.editingId() === this.currentTodo().id);
   protected isSubmitDisabled: Signal<boolean> = computed(() => !this.newTitle().trim());
   protected isCompleted: Signal<boolean> = computed(
-    () => this.currentTodo().status === TODO_STATUS.COMPLETED
+    () => this.currentTodo().status === TODO_STATUS.COMPLETED,
   );
   @ViewChild('editInput') set editInputRef(ref: ElementRef<HTMLInputElement>) {
     if (ref && this.isEditing()) {

@@ -4,6 +4,8 @@
   [class.completed]="isCompleted()"
   (click)="handleTodoClick(currentTodo().id)"
   [class.selected]="isSelected()"
+  tabindex="0"
+  role="button"
 >
   <mat-checkbox
     [checked]="isCompleted()"

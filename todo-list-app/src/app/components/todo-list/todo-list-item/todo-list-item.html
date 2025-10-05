@@ -3,7 +3,7 @@
   class="todo-item"
   [class.completed]="isCompleted()"
   (click)="handleTodoClick(currentTodo().id)"
-  [ngClass]="{ selected: isSelected() }"
+  [class.selected]="isSelected()"
 >
   <mat-checkbox
     [checked]="isCompleted()"

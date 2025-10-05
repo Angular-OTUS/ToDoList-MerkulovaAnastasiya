@@ -40,20 +40,20 @@ export class TodoListItem {
   protected TOOLTIP_TEXT = TOOLTIP_TEXT;
 
   public currentTodo: InputSignal<ITodoItem> = input.required<ITodoItem>();
-  public selectedId: InputSignal<number | null> = input<number | null>(null);
-  public editingId: InputSignal<number | null> = input<number | null>(null);
+  public selectedId: InputSignal<string | null> = input<string | null>(null);
+  public editingId: InputSignal<string | null> = input<string | null>(null);
 
-  public updateCurrentTodo: OutputEmitterRef<EditTodoDto> = output<EditTodoDto>();
-  public removeCurrentTodo: OutputEmitterRef<number> = output<number>();
-  public clickCurrentTodo: OutputEmitterRef<number> = output<number>();
-  public openEditing: OutputEmitterRef<number> = output<number>();
-  public closeEditing: OutputEmitterRef<void> = output<void>();
+  protected updateCurrentTodo: OutputEmitterRef<EditTodoDto> = output<EditTodoDto>();
+  protected removeCurrentTodo: OutputEmitterRef<string> = output<string>();
+  protected clickCurrentTodo: OutputEmitterRef<string> = output<string>();
+  protected openEditing: OutputEmitterRef<string> = output<string>();
+  protected closeEditing: OutputEmitterRef<void> = output<void>();
 
-  public newTitle: WritableSignal<string> = signal<string>('');
-  public isSelected: Signal<boolean> = computed(() => this.selectedId() === this.currentTodo().id);
-  public isEditing: Signal<boolean> = computed(() => this.editingId() === this.currentTodo().id);
-  public isSubmitDisabled: Signal<boolean> = computed(() => !this.newTitle().trim());
-  public isCompleted: Signal<boolean> = computed(
+  protected newTitle: WritableSignal<string> = signal<string>('');
+  protected isSelected: Signal<boolean> = computed(() => this.selectedId() === this.currentTodo().id);
+  protected isEditing: Signal<boolean> = computed(() => this.editingId() === this.currentTodo().id);
+  protected isSubmitDisabled: Signal<boolean> = computed(() => !this.newTitle().trim());
+  protected isCompleted: Signal<boolean> = computed(
     () => this.currentTodo().status === TODO_STATUS.COMPLETED
   );
   @ViewChild('editInput') set editInputRef(ref: ElementRef<HTMLInputElement>) {
@@ -62,40 +62,40 @@ export class TodoListItem {
     }
   }
 
-  public handleOpenEditing(e: Event) {
+  protected handleOpenEditing(e: Event) {
     e.stopPropagation();
     this.openEditing.emit(this.currentTodo().id);
     this.newTitle.set(this.currentTodo().text);
   }
 
-  public handleCloseEditing() {
+  protected handleCloseEditing() {
     this.newTitle.set('');
     this.closeEditing.emit();
   }
 
-  public handleUpdateTodo(e: Event) {
+  protected handleUpdateTodo(e: Event) {
     e.stopPropagation();
     this.updateCurrentTodo.emit({ ...this.currentTodo(), text: this.newTitle() });
     this.handleCloseEditing();
   }
 
-  public handleRemoveTodo(e: Event, id: number) {
+  protected handleRemoveTodo(e: Event, id: string) {
     e.stopPropagation();
     this.removeCurrentTodo.emit(id);
   }
 
-  public handleTodoClick(id: number) {
+  protected handleTodoClick(id: string) {
     this.clickCurrentTodo.emit(id);
   }
 
-  public onCheckboxChange(e: MatCheckboxChange) {
+  protected onCheckboxChange(e: MatCheckboxChange) {
     this.updateCurrentTodo.emit({
       ...this.currentTodo(),
       status: e.checked ? TODO_STATUS.COMPLETED : TODO_STATUS.INPROGRESS,
     });
   }
 
-  public handleKeydownPress(event: KeyboardEvent) {
+  protected handleKeydownPress(event: KeyboardEvent) {
     switch (event.key) {
       case 'Enter':
         this.handleUpdateTodo(event);

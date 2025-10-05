@@ -6,6 +6,6 @@ export interface AddTodoDto {
 }
 
 export interface EditTodoDto extends AddTodoDto {
-  id: number;
+  id: string;
   status: TTodoStatus;
 }

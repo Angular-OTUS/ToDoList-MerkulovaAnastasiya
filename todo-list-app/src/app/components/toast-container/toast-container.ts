@@ -11,7 +11,7 @@ import { TOAST_ICONS } from '../../shared/util/constants';
   styleUrl: './toast-container.scss',
 })
 export class ToastContainer {
-  private toastService = inject(ToastService);
+  private readonly toastService = inject(ToastService);
   protected readonly toastIcons = TOAST_ICONS
 
   protected toasts = computed(() => this.toastService.allToasts());

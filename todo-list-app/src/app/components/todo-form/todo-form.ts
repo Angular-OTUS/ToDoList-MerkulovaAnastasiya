@@ -22,15 +22,15 @@ import { TOOLTIP_TEXT } from '../../shared/util/constants';
   styleUrl: './todo-form.scss',
 })
 export class TodoForm {
-  protected TOOLTIP_TEXT = TOOLTIP_TEXT;
+  protected readonly TOOLTIP_TEXT = TOOLTIP_TEXT;
   public newTodoText: ModelSignal<string> = model<string>('');
   public newTodoDescription: ModelSignal<string> = model<string>('');
 
   public isSubmitDisabled: InputSignal<boolean> = input<boolean>(true);
 
-  public addTodo: OutputEmitterRef<void> = output<void>();
+  protected addTodo: OutputEmitterRef<void> = output<void>();
 
-  public onSubmit(e: Event): void {
+  protected onSubmit(e: Event): void {
     e.preventDefault();
     this.addTodo.emit();
   }

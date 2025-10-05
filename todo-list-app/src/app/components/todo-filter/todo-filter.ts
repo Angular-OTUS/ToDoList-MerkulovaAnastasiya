@@ -17,16 +17,16 @@ type TFilterOptions = {
   styleUrl: './todo-filter.scss',
 })
 export class TodoFilter {
-  protected options: TFilterOptions[] = [
+  protected readonly options: TFilterOptions[] = [
     { label: DEFAULT_FILTER_STATUS, value: null },
     { label: TODO_STATUS.INPROGRESS, value: TODO_STATUS.INPROGRESS },
     { label: TODO_STATUS.COMPLETED, value: TODO_STATUS.COMPLETED },
   ];
   public value: InputSignal<string | null> = input<string | null>(null);
 
-  public valueChange: OutputEmitterRef<string | null> = output<string | null>();
+  protected valueChange: OutputEmitterRef<string | null> = output<string | null>();
 
-  public onValueChange(newValue: string | null): void {
+  protected onValueChange(newValue: string | null): void {
     this.valueChange.emit(newValue);
   }
 }

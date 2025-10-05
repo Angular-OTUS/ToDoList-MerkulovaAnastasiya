@@ -9,6 +9,8 @@ export const TOAST_TEXT = {
   ADD_TODO: 'Todo successfully saved',
   DELETE_TODO: 'Todo was removed',
   UPDATE_TODO: 'Todo was updated',
+  ERROR_TODO: 'Failed to manage todo',
+  ERROR_TODOS: 'Failed to fetch todos',
 } as const;
 
 export const TOAST_VARIANT = {

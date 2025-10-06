@@ -8,117 +8,133 @@ import {
   signal,
   WritableSignal,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { TodosDataService } from '../../services/todos-data/todos-data';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { of, Subject } from 'rxjs';
+import { filter, switchMap, takeUntil } from 'rxjs/operators';
+import { TodosApi } from '../../services/todos-api/todos-api';
+import { AddTodoDto, EditTodoDto } from '../../shared/types/dto/todo.dto';
 import { ITodoItem } from '../../shared/types/todo-item.interface';
 import { Loader } from '../../shared/ui/loader/loader';
+import { TodoFilter } from '../todo-filter/todo-filter';
 import { TodoForm } from '../todo-form/todo-form';
 import { TodoListItem } from './todo-list-item/todo-list-item';
-import { EditTodoDto } from '../../shared/types/dto/todo.dto';
-import { ToastService } from '../../services/toast/toast';
-import { TOAST_TEXT, TOAST_VARIANT } from '../../shared/util/constants';
 
 @Component({
   selector: 'app-todo-list',
-  imports: [TodoListItem, FormsModule, MatFormFieldModule, MatInputModule, Loader, TodoForm],
+  imports: [TodoListItem, Loader, TodoForm, TodoFilter],
   templateUrl: './todo-list.html',
   styleUrl: './todo-list.scss',
 })
 export class TodoList implements OnInit, OnDestroy {
-  private timeoutId?: number;
-  private readonly todosDataService: TodosDataService = inject(TodosDataService);
-  private readonly toastService: ToastService = inject(ToastService);
+  private destroy$ = new Subject<void>();
+  private readonly todosApiService = inject(TodosApi);
 
-  protected todos: WritableSignal<ITodoItem[]> = signal<ITodoItem[]>(
-    this.todosDataService.getAllTodos()
-  );
-  public newTodoText: WritableSignal<string> = signal<string>('');
-  public newTodoDescription: WritableSignal<string> = signal<string>('');
+  protected todos: WritableSignal<ITodoItem[]> = signal([]);
+  protected isLoading: WritableSignal<boolean> = signal(true);
 
-  public selectedItemId: WritableSignal<number | null> = signal<number | null>(null);
-  public editingItemId: WritableSignal<number | null> = signal<number | null>(null);
+  protected selectedItemId: WritableSignal<string | null> = signal(null);
+  protected editingItemId: WritableSignal<string | null> = signal(null);
 
-  public currentDescription = computed(() => {
-    const selectedId = this.selectedItemId();
-    if (!selectedId) return null;
+  protected filterValue: WritableSignal<string | null> = signal(null);
 
-    const todo = this.todosDataService.getTodoById(selectedId);
+  protected filteredTodos: Signal<ITodoItem[]> = computed(() => {
+    const filter = this.filterValue();
 
-    return todo ? todo.description : null;
+    if (!filter) {
+      return this.todos();
+    }
+
+    return [...this.todos()].filter((todo) => todo.status === filter);
   });
 
-  public isLoading: WritableSignal<boolean> = signal<boolean>(true);
-  public isSubmitDisabled: Signal<boolean> = computed(
-    () => !this.newTodoText().trim() && !this.newTodoDescription().trim()
+  private selectedId$ = toObservable(this.selectedItemId).pipe(takeUntil(this.destroy$));
+
+  protected selectedTodo = toSignal(
+    this.selectedId$.pipe(
+      switchMap((selectedId) =>
+        selectedId ? this.todosApiService.getTodoById(selectedId) : of(null)
+      )
+    ),
+    { initialValue: null }
   );
 
+  protected currentDescription = computed(() => this.selectedTodo()?.description || null);
+
   public ngOnInit(): void {
-    this.timeoutId = setTimeout(() => {
-      this.isLoading.set(false);
-    }, 500);
+    this.loadTodos();
   }
 
   public ngOnDestroy(): void {
-    if (this.timeoutId !== undefined) {
-      window.clearTimeout(this.timeoutId);
-    }
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  private cleanForm(): void {
-    this.newTodoText.set('');
-    this.newTodoDescription.set('');
+  private loadTodos(): void {
+    this.isLoading.set(true);
+    this.todosApiService
+      .getAllTodos()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((todos) => {
+        this.todos.set(todos);
+        this.isLoading.set(false);
+      });
   }
 
-   public openEditing(id: number): void {
+  protected openEditing(id: string): void {
     this.editingItemId.set(id);
   }
 
-  public closeEditing(): void {
+  protected closeEditing(): void {
     this.editingItemId.set(null);
   }
 
-  public addNewTodo(): void {
-    if (this.isSubmitDisabled()) return;
-
-    const todoData = {
-      text: this.newTodoText(),
-      description: this.newTodoDescription(),
-    };
-
-    this.todosDataService.addNewTodo(todoData);
-    this.todos.set(this.todosDataService.getAllTodos());
-
-    this.cleanForm();
-    this.toastService.addToast({
-      variant:  TOAST_VARIANT.SUCCESS,
-      message: TOAST_TEXT.ADD_TODO,
-    });
-  }
-
-  public selectTodoId(id: number): void {
+  protected selectTodoId(id: string): void {
     this.selectedItemId.set(id);
   }
 
-  public updateTodo(data: EditTodoDto): void {
-    this.todosDataService.editTodo(data);
-    this.closeEditing();
-    this.toastService.addToast({
-      variant: TOAST_VARIANT.SUCCESS,
-      message: TOAST_TEXT.UPDATE_TODO,
-    });
+  protected onFilterChange(value: string | null): void {
+    this.filterValue.set(value);
+    this.selectedItemId.set(null);
   }
 
-  public deleteTodoById(id: number): void {
+  protected addNewTodo(todoData: AddTodoDto): void {
+    if (!todoData.text.trim() && !todoData.description.trim()) return;
+    this.todosApiService
+      .addNewTodo(todoData)
+      .pipe(
+        filter((newTodo) => !!newTodo),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((newTodo) => {
+        this.todos.update((currentTodos) => [...currentTodos, newTodo]);
+      });
+  }
+
+  protected updateTodo(data: EditTodoDto): void {
+    this.todosApiService
+      .editTodo(data)
+      .pipe(
+        filter((updatedTodo) => !!updatedTodo),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((updatedTodo) => {
+        this.todos.update((currentTodos) =>
+          currentTodos.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo))
+        );
+        this.closeEditing();
+      });
+  }
+
+  protected deleteTodoById(id: string): void {
     if (this.selectedItemId() === id) {
       this.selectedItemId.set(null);
     }
-    this.todosDataService.removeTodo(id);
-    this.todos.set(this.todosDataService.getAllTodos());
-    this.toastService.addToast({
-      variant: TOAST_VARIANT.ERROR,
-      message: TOAST_TEXT.DELETE_TODO,
-    });
+
+    this.todosApiService
+      .removeTodo(id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.todos.update((currentTodos) => currentTodos.filter((todo) => todo.id !== id));
+      });
   }
 }

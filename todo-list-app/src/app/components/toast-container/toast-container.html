@@ -1,6 +1,6 @@
 <div class="toast-container">
   @for (toast of toasts(); track toast.id) {
-  <div class="toast" [ngClass]="'toast-' + toast.variant">
+  <div [class]="getToastClassString(toast)">
     <div class="toast-content">
       <mat-icon class="toast-icon">{{ toastIcons[toast.variant] }}</mat-icon>
       <span class="toast-message">{{ toast.message }}</span>

@@ -8,7 +8,7 @@ describe('TodoListItem', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TodoListItem]
+      imports: [TodoListItem],
     })
     .compileComponents();
 

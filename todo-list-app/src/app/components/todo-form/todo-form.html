@@ -1,30 +1,39 @@
 <div [ngStyle]="{ 'margin-top': '20px' }">
   <h2>Add new todo</h2>
-  <form class="add-todo-form" (submit)="onSubmit($event)">
+  <form class="add-todo-form" [formGroup]="newTodoForm" (ngSubmit)="onSubmit($event)">
     <div class="form-fields">
       <mat-form-field class="form-input-wrapper">
         <input
           type="text"
           matInput
           placeholder="Todo title"
-          [(ngModel)]="newTodoText"
+          formControlName="text"
           name="todo-title"
-          maxlength="45"
         />
+        @if (errorService.showErrorMessage(newTodoForm.controls.text)) {
+        <mat-error>{{
+          errorService.getErrorMessage(newTodoForm.controls.text, 'Title')
+        }}</mat-error>
+        }
       </mat-form-field>
       <mat-form-field class="form-input-wrapper">
         <textarea
           matInput
           placeholder="Todo description"
-          [(ngModel)]="newTodoDescription"
+          formControlName="description"
           name="todo-description"
         ></textarea>
+        @if (errorService.showErrorMessage(newTodoForm.controls.description)) {
+        <mat-error>{{
+          errorService.getErrorMessage(newTodoForm.controls.description, 'Description')
+        }}</mat-error>
+        }
       </mat-form-field>
     </div>
     <app-button
       type="submit"
-      [isDisabled]="isSubmitDisabled()"
-      [ngClass]="'form-button'"
+      [isDisabled]="newTodoForm.invalid"
+      [class]="'form-button'"
       appShowTooltip
       [tooltipText]="TOOLTIP_TEXT.ADD_BUTTON"
       >Add task</app-button

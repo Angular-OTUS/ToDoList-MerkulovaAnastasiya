@@ -1,10 +1,14 @@
 @use '@angular/material' as mat;
 
-.todo-item {
+.todo-item,
+.todo-item-form {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 10px;
+}
+
+.todo-item {
   background-color: var(--mat-sys-tertiary-container);
   border-radius: 6px;
   padding-inline: 18px;
@@ -13,6 +17,22 @@
     color: inherit;
     background-color: var(--mat-sys-inverse-on-surface);
     cursor: pointer;
+  }
+  &:focus {
+    outline: 2px solid var(--mat-sys-outline);
+    outline-offset: -2px;
+  }
+  &.completed {
+    & > .todo-text {
+      text-decoration: line-through;
+    }
+    &:not(.selected) {
+      background-color: var(--mat-sys-outline-variant);
+    }
+  }
+  &.selected {
+    color: var(--mat-sys-inverse-on-surface);
+    background-color: var(--mat-sys-on-primary-fixed);
   }
 }
 
@@ -27,11 +47,6 @@
       container-vertical-padding: 8px,
     )
   );
-}
-
-.selected {
-  color: var(--mat-sys-inverse-on-surface);
-  background-color: var(--mat-sys-on-primary-fixed);
 }
 
 .todo-text {

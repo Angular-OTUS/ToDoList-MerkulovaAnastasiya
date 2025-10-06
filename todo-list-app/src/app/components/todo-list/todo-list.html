@@ -1,11 +1,14 @@
 <div class="container">
-  <h1 class="header">Todo List</h1>
+  <div class="header">
+    <h1 class="headline">Todo List</h1>
+    <app-todo-filter [value]="filterValue()" (valueChange)="onFilterChange($event)" />
+  </div>
   <div class="todos-section">
     @if (isLoading()) {
     <app-loader></app-loader>
     } @else {
     <ul class="todos-list">
-      @for (todo of todos(); track todo.id) {
+      @for (todo of filteredTodos(); track todo.id) {
       <app-todo-list-item
         [currentTodo]="todo"
         [selectedId]="selectedItemId()"
@@ -17,7 +20,7 @@
         (closeEditing)="closeEditing()"
       ></app-todo-list-item>
       } @empty {
-      <li>There are no items. Type new task.</li>
+      <li>There are no items. Type new task or change filter.</li>
       }
     </ul>
     }
@@ -30,10 +33,5 @@
       }
     </div>
   </div>
-  <app-todo-form
-    [(newTodoText)]="newTodoText"
-    [(newTodoDescription)]="newTodoDescription"
-    [isSubmitDisabled]="isSubmitDisabled()"
-    (addTodo)="addNewTodo()"
-  ></app-todo-form>
+  <app-todo-form (formSubmitted)="addNewTodo($event)"></app-todo-form>
 </div>

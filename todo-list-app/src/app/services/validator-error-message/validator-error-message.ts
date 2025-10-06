@@ -5,6 +5,10 @@ import { AbstractControl } from '@angular/forms';
   providedIn: 'root',
 })
 export class ValidatorErrorMessage {
+  public showErrorMessage(control: AbstractControl | null): boolean {
+    return control ? control.invalid && (control.touched || control.dirty) : false;
+  }
+
   public getErrorMessage(control: AbstractControl | null, fieldName: string): string {
     if (!control || !control.errors) {
       return '';
@@ -17,9 +21,9 @@ export class ValidatorErrorMessage {
       case 'required':
         return `${fieldName} is required.`;
 
-      case 'minLength':
-        if (errors['minLength']?.requiredLength !== undefined) {
-          return `${fieldName} must be at least ${errors['minLength'].requiredLength} chars.`;
+      case 'minlength':
+        if (errors['minlength']?.requiredLength !== undefined) {
+          return `${fieldName} must be at least ${errors['minlength'].requiredLength} chars.`;
         }
         break;
 

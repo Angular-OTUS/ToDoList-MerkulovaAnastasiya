@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { of, Subject } from 'rxjs';
-import { switchMap, takeUntil } from 'rxjs/operators';
+import { filter, switchMap, takeUntil } from 'rxjs/operators';
 import { TodosApi } from '../../services/todos-api/todos-api';
 import { AddTodoDto, EditTodoDto } from '../../shared/types/dto/todo.dto';
 import { ITodoItem } from '../../shared/types/todo-item.interface';
@@ -52,10 +52,10 @@ export class TodoList implements OnInit, OnDestroy {
   protected selectedTodo = toSignal(
     this.selectedId$.pipe(
       switchMap((selectedId) =>
-        selectedId ? this.todosApiService.getTodoById(selectedId) : of(null),
-      ),
+        selectedId ? this.todosApiService.getTodoById(selectedId) : of(null)
+      )
     ),
-    { initialValue: null },
+    { initialValue: null }
   );
 
   protected currentDescription = computed(() => this.selectedTodo()?.description || null);
@@ -101,25 +101,27 @@ export class TodoList implements OnInit, OnDestroy {
     if (!todoData.text.trim() && !todoData.description.trim()) return;
     this.todosApiService
       .addNewTodo(todoData)
-      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        filter((newTodo) => !!newTodo),
+        takeUntil(this.destroy$)
+      )
       .subscribe((newTodo) => {
-        if (newTodo) {
-          this.todos.update((currentTodos) => [...currentTodos, newTodo]);
-        }
+        this.todos.update((currentTodos) => [...currentTodos, newTodo]);
       });
   }
 
   protected updateTodo(data: EditTodoDto): void {
     this.todosApiService
       .editTodo(data)
-      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        filter((updatedTodo) => !!updatedTodo),
+        takeUntil(this.destroy$)
+      )
       .subscribe((updatedTodo) => {
-        if (updatedTodo) {
-          this.todos.update((currentTodos) =>
-            currentTodos.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo)),
-          );
-          this.closeEditing();
-        }
+        this.todos.update((currentTodos) =>
+          currentTodos.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo))
+        );
+        this.closeEditing();
       });
   }
 

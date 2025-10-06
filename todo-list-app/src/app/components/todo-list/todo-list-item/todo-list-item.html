@@ -46,8 +46,7 @@
         formControlName="text"
         (keydown)="handleKeydownPress($event)"
       />
-      @if (editTodoForm.controls.text.invalid &&(
-      editTodoForm.controls.text.touched||editTodoForm.controls.text.dirty)) {
+      @if (errorService.showErrorMessage(editTodoForm.controls.text)) {
       <mat-error>{{ errorService.getErrorMessage(editTodoForm.controls.text, 'Title') }}</mat-error>
       }
     </mat-form-field>

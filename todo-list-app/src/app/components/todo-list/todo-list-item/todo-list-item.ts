@@ -124,4 +124,10 @@ export class TodoListItem {
         break;
     }
   }
+
+
+  protected shouldShowError(controlName: string): boolean {
+  const control = this.editTodoForm.get(controlName);
+  return control ? control.invalid && (control.touched || control.dirty) : false;
+}
 }

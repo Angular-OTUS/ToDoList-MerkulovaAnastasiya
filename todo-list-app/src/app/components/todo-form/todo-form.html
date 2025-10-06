@@ -10,8 +10,7 @@
           formControlName="text"
           name="todo-title"
         />
-        @if (newTodoForm.controls.text.invalid &&(
-        newTodoForm.controls.text.touched||newTodoForm.controls.text.dirty)) {
+        @if (errorService.showErrorMessage(newTodoForm.controls.text)) {
         <mat-error>{{
           errorService.getErrorMessage(newTodoForm.controls.text, 'Title')
         }}</mat-error>
@@ -24,8 +23,7 @@
           formControlName="description"
           name="todo-description"
         ></textarea>
-        @if (newTodoForm.controls.description.invalid
-        &&(newTodoForm.controls.description.touched||newTodoForm.controls.description.dirty)) {
+        @if (errorService.showErrorMessage(newTodoForm.controls.description)) {
         <mat-error>{{
           errorService.getErrorMessage(newTodoForm.controls.description, 'Description')
         }}</mat-error>

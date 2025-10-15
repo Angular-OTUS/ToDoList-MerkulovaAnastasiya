@@ -17,7 +17,7 @@ export const routes: Routes = [
         path: APP_ROUTES.TASK_DETAILS,
         loadComponent: () =>
           import('./components/todo-list/todo-details/todo-details').then(
-            (c) => c.TodoDetails
+            (c) => c.TodoDetails,
           ),
       },
     ],

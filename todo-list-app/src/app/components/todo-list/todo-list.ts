@@ -66,9 +66,7 @@ export class TodoList implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
         map((params) => params.get('id'))
       )
-      .subscribe((id) => {
-        this.selectedItemId.set(id);
-      });
+      .subscribe((id) => this.selectedItemId.set(id));
   }
 
   private loadTodos(): void {

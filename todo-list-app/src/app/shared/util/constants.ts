@@ -29,3 +29,10 @@ export const TODO_STATUS = {
   INPROGRESS : 'InProgress',
   COMPLETED: 'Completed',
 } as const;
+
+export const APP_ROUTES = {
+  MAIN: '',
+  TASKS: 'tasks',
+  TASK_DETAILS: ':id',
+  ERROR: '**',
+} as const;

@@ -15,13 +15,13 @@ import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angula
 import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { ValidatorErrorMessage } from '../../../services/validator-error-message/validator-error-message';
 import { ShowTooltip } from '../../../shared/directives/show-tooltip';
 import { EditTodoDto } from '../../../shared/types/dto/todo.dto';
 import { ITodoItem } from '../../../shared/types/todo-item.interface';
 import { Button } from '../../../shared/ui/button/button';
 import { TODO_STATUS, TOOLTIP_TEXT } from '../../../shared/util/constants';
 import { trimmedMinLength } from '../../../shared/validators/trimmed-minlength.validator';
-import { ValidatorErrorMessage } from '../../../services/validator-error-message/validator-error-message';
 
 @Component({
   selector: 'app-todo-list-item',
@@ -63,6 +63,7 @@ export class TodoListItem {
   protected isSelected: Signal<boolean> = computed(
     () => this.selectedId() === this.currentTodo().id,
   );
+
   protected isEditing: Signal<boolean> = computed(() => this.editingId() === this.currentTodo().id);
 
   protected isCompleted: Signal<boolean> = computed(
@@ -125,9 +126,8 @@ export class TodoListItem {
     }
   }
 
-
   protected shouldShowError(controlName: string): boolean {
-  const control = this.editTodoForm.get(controlName);
-  return control ? control.invalid && (control.touched || control.dirty) : false;
-}
+    const control = this.editTodoForm.get(controlName);
+    return control ? control.invalid && (control.touched || control.dirty) : false;
+  }
 }

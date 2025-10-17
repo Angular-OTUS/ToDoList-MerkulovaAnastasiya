@@ -8,26 +8,29 @@ import {
   signal,
   WritableSignal,
 } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { of, Subject } from 'rxjs';
-import { filter, switchMap, takeUntil } from 'rxjs/operators';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { Subject } from 'rxjs';
+import { filter, map, takeUntil } from 'rxjs/operators';
 import { TodosApi } from '../../services/todos-api/todos-api';
 import { AddTodoDto, EditTodoDto } from '../../shared/types/dto/todo.dto';
 import { ITodoItem } from '../../shared/types/todo-item.interface';
 import { Loader } from '../../shared/ui/loader/loader';
+import { APP_ROUTES } from '../../shared/util/constants';
 import { TodoFilter } from '../todo-filter/todo-filter';
 import { TodoForm } from '../todo-form/todo-form';
 import { TodoListItem } from './todo-list-item/todo-list-item';
 
 @Component({
   selector: 'app-todo-list',
-  imports: [TodoListItem, Loader, TodoForm, TodoFilter],
+  imports: [TodoListItem, Loader, TodoForm, TodoFilter, RouterOutlet],
   templateUrl: './todo-list.html',
   styleUrl: './todo-list.scss',
 })
 export class TodoList implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private readonly todosApiService = inject(TodosApi);
+  private readonly router = inject(Router);
+  private readonly activatedRoute = inject(ActivatedRoute);
 
   protected todos: WritableSignal<ITodoItem[]> = signal([]);
   protected isLoading: WritableSignal<boolean> = signal(true);
@@ -47,26 +50,23 @@ export class TodoList implements OnInit, OnDestroy {
     return [...this.todos()].filter((todo) => todo.status === filter);
   });
 
-  private selectedId$ = toObservable(this.selectedItemId).pipe(takeUntil(this.destroy$));
-
-  protected selectedTodo = toSignal(
-    this.selectedId$.pipe(
-      switchMap((selectedId) =>
-        selectedId ? this.todosApiService.getTodoById(selectedId) : of(null)
-      )
-    ),
-    { initialValue: null }
-  );
-
-  protected currentDescription = computed(() => this.selectedTodo()?.description || null);
-
   public ngOnInit(): void {
     this.loadTodos();
+    this.setupRouteListener();
   }
 
   public ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  private setupRouteListener(): void {
+    this.activatedRoute.firstChild?.paramMap
+      .pipe(
+        takeUntil(this.destroy$),
+        map((params) => params.get('id')),
+      )
+      .subscribe((id) => this.selectedItemId.set(id));
   }
 
   private loadTodos(): void {
@@ -90,11 +90,13 @@ export class TodoList implements OnInit, OnDestroy {
 
   protected selectTodoId(id: string): void {
     this.selectedItemId.set(id);
+    this.router.navigate([APP_ROUTES.TASKS, id]);
   }
 
   protected onFilterChange(value: string | null): void {
     this.filterValue.set(value);
     this.selectedItemId.set(null);
+    this.router.navigate([APP_ROUTES.TASKS]);
   }
 
   protected addNewTodo(todoData: AddTodoDto): void {
@@ -103,7 +105,7 @@ export class TodoList implements OnInit, OnDestroy {
       .addNewTodo(todoData)
       .pipe(
         filter((newTodo) => !!newTodo),
-        takeUntil(this.destroy$)
+        takeUntil(this.destroy$),
       )
       .subscribe((newTodo) => {
         this.todos.update((currentTodos) => [...currentTodos, newTodo]);
@@ -115,11 +117,11 @@ export class TodoList implements OnInit, OnDestroy {
       .editTodo(data)
       .pipe(
         filter((updatedTodo) => !!updatedTodo),
-        takeUntil(this.destroy$)
+        takeUntil(this.destroy$),
       )
       .subscribe((updatedTodo) => {
         this.todos.update((currentTodos) =>
-          currentTodos.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo))
+          currentTodos.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo)),
         );
         this.closeEditing();
       });
@@ -128,6 +130,7 @@ export class TodoList implements OnInit, OnDestroy {
   protected deleteTodoById(id: string): void {
     if (this.selectedItemId() === id) {
       this.selectedItemId.set(null);
+      this.router.navigate([APP_ROUTES.TASKS]);
     }
 
     this.todosApiService

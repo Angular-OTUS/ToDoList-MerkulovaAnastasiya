@@ -3,10 +3,10 @@
     <h1 class="headline">Todo List</h1>
     <app-todo-filter [value]="filterValue()" (valueChange)="onFilterChange($event)" />
   </div>
+  @if (isLoading()) {
+  <app-loader></app-loader>
+  } @else {
   <div class="todos-section">
-    @if (isLoading()) {
-    <app-loader></app-loader>
-    } @else {
     <ul class="todos-list">
       @for (todo of filteredTodos(); track todo.id) {
       <app-todo-list-item
@@ -23,15 +23,9 @@
       <li>There are no items. Type new task or change filter.</li>
       }
     </ul>
-    }
-    <div>
-      @if(currentDescription() !== null){
-      <div class="todo-details">
-        <h3>Description</h3>
-        <p>{{ currentDescription() }}</p>
-      </div>
-      }
-    </div>
+    <router-outlet />
   </div>
+  }
+
   <app-todo-form (formSubmitted)="addNewTodo($event)"></app-todo-form>
 </div>

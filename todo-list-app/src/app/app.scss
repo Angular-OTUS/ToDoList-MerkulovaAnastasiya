@@ -4,4 +4,22 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 10px;
+
+  .app-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    &-title {
+      color: var(--mat-sys-primary);
+    }
+    &-icon {
+      width: 26px;
+      height: 26px;
+      color: var(--mat-sys-inverse-on-surface);
+      background-color: var(--mat-sys-primary);
+      border-radius: 2px;
+    }
+  }
 }

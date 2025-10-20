@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   Component,
   computed,
   ElementRef,
@@ -36,6 +37,7 @@ import { trimmedMinLength } from '../../../shared/validators/trimmed-minlength.v
   ],
   templateUrl: './todo-list-item.html',
   styleUrl: './todo-list-item.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodoListItem {
   private readonly formBuilder: NonNullableFormBuilder = inject(NonNullableFormBuilder);
@@ -61,13 +63,13 @@ export class TodoListItem {
   });
 
   protected isSelected: Signal<boolean> = computed(
-    () => this.selectedId() === this.currentTodo().id,
+    () => this.selectedId() === this.currentTodo().id
   );
 
   protected isEditing: Signal<boolean> = computed(() => this.editingId() === this.currentTodo().id);
 
   protected isCompleted: Signal<boolean> = computed(
-    () => this.currentTodo().status === TODO_STATUS.COMPLETED,
+    () => this.currentTodo().status === TODO_STATUS.COMPLETED
   );
   @ViewChild('editInput') set editInputRef(ref: ElementRef<HTMLInputElement>) {
     if (ref && this.isEditing()) {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, output } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -22,6 +22,7 @@ import { ValidatorErrorMessage } from '../../services/validator-error-message/va
   ],
   templateUrl: './todo-form.html',
   styleUrl: './todo-form.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodoForm {
   private readonly formBuilder: NonNullableFormBuilder = inject(NonNullableFormBuilder);

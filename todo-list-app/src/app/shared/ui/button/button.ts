@@ -1,4 +1,13 @@
-import { Component, computed, input, InputSignal, output, OutputEmitterRef, Signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  InputSignal,
+  output,
+  OutputEmitterRef,
+  Signal,
+} from '@angular/core';
 
 type TAppButton = 'submit' | 'delete';
 
@@ -7,6 +16,7 @@ type TAppButton = 'submit' | 'delete';
   imports: [],
   templateUrl: './button.html',
   styleUrl: './button.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Button {
   public type: InputSignal<TAppButton> = input.required<TAppButton>();
@@ -14,7 +24,9 @@ export class Button {
 
   public action: OutputEmitterRef<Event> = output<Event>();
 
-  public buttonClass: Signal<string> = computed(() => this.type() === 'submit' ? 'add-button' : 'delete-button');
+  public buttonClass: Signal<string> = computed(() =>
+    this.type() === 'submit' ? 'add-button' : 'delete-button'
+  );
 
   public handleClick(event: Event) {
     if (this.isDisabled()) return;

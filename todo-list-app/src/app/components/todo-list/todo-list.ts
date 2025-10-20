@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   computed,
   inject,
@@ -25,6 +26,7 @@ import { TodoListItem } from './todo-list-item/todo-list-item';
   imports: [TodoListItem, Loader, TodoForm, TodoFilter, RouterOutlet],
   templateUrl: './todo-list.html',
   styleUrl: './todo-list.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodoList implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
@@ -64,7 +66,7 @@ export class TodoList implements OnInit, OnDestroy {
     this.activatedRoute.firstChild?.paramMap
       .pipe(
         takeUntil(this.destroy$),
-        map((params) => params.get('id')),
+        map((params) => params.get('id'))
       )
       .subscribe((id) => this.selectedItemId.set(id));
   }
@@ -105,7 +107,7 @@ export class TodoList implements OnInit, OnDestroy {
       .addNewTodo(todoData)
       .pipe(
         filter((newTodo) => !!newTodo),
-        takeUntil(this.destroy$),
+        takeUntil(this.destroy$)
       )
       .subscribe((newTodo) => {
         this.todos.update((currentTodos) => [...currentTodos, newTodo]);
@@ -117,11 +119,11 @@ export class TodoList implements OnInit, OnDestroy {
       .editTodo(data)
       .pipe(
         filter((updatedTodo) => !!updatedTodo),
-        takeUntil(this.destroy$),
+        takeUntil(this.destroy$)
       )
       .subscribe((updatedTodo) => {
         this.todos.update((currentTodos) =>
-          currentTodos.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo)),
+          currentTodos.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo))
         );
         this.closeEditing();
       });

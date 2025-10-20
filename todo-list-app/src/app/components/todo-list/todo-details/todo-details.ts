@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, switchMap, tap } from 'rxjs';
@@ -10,6 +10,7 @@ import { APP_ROUTES } from '../../../shared/util/constants';
   imports: [],
   templateUrl: './todo-details.html',
   styleUrl: './todo-details.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodoDetails implements OnDestroy {
   private destroy$ = new Subject<void>();
@@ -25,8 +26,8 @@ export class TodoDetails implements OnDestroy {
       }),
       tap((todo) => {
         if (!todo) this.router.navigate([APP_ROUTES.ERROR]);
-      }),
-    ),
+      })
+    )
   );
   protected currentDescription = computed(() => this.todo$()?.description || null);
 

@@ -1,4 +1,11 @@
-import { Component, input, InputSignal, output, OutputEmitterRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  InputSignal,
+  output,
+  OutputEmitterRef,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -15,6 +22,7 @@ interface TFilterOptions {
   imports: [MatFormFieldModule, MatSelectModule, MatInputModule, FormsModule],
   templateUrl: './todo-filter.html',
   styleUrl: './todo-filter.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodoFilter {
   protected readonly options: TFilterOptions[] = [

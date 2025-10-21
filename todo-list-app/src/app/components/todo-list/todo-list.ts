@@ -19,7 +19,7 @@ import { Loader } from '../../shared/ui/loader/loader';
 import { APP_ROUTES } from '../../shared/util/constants';
 import { TodoFilter } from '../todo-filter/todo-filter';
 import { TodoForm } from '../todo-form/todo-form';
-import { TodoListItem } from './todo-list-item/todo-list-item';
+import { TodoListItem } from '../../shared/ui/todo-list-item/todo-list-item';
 
 @Component({
   selector: 'app-todo-list',

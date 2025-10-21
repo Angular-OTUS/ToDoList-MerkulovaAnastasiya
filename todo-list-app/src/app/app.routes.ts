@@ -24,7 +24,7 @@ export const routes: Routes = [
   },
   {
     path: APP_ROUTES.BOARD,
-    loadComponent: () => import('./components/todo-list/todo-list').then((c) => c.TodoList),
+    loadComponent: () => import('./components/todo-board/todo-board').then((c) => c.TodoBoard),
     title: ROUTE_TITLES.BOARD,
   },
   {

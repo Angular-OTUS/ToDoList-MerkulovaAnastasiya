@@ -1,0 +1,39 @@
+<div class="container">
+  <div class="header">
+    <h1 class="headline">Todos Board</h1>
+  </div>
+  @if (isLoading()) {
+  <app-loader></app-loader>
+  } @else {
+  <div class="todos-section">
+    <div>
+      <h2>In progress</h2>
+      <ul class="todos-list">
+        @for (todo of inprogressTodos(); track todo.id) {
+        <app-todo-list-item
+          [currentTodo]="todo"
+          [selectedId]="null"
+          [editingId]="null"
+        ></app-todo-list-item>
+        } @empty {
+        <li>There are no items.</li>
+        }
+      </ul>
+    </div>
+    <div>
+      <h2>Completed</h2>
+      <ul class="todos-list">
+        @for (todo of completedTodos(); track todo.id) {
+        <app-todo-list-item
+          [currentTodo]="todo"
+          [selectedId]="null"
+          [editingId]="null"
+        ></app-todo-list-item>
+        } @empty {
+        <li>There are no items.</li>
+        }
+      </ul>
+    </div>
+  </div>
+  }
+</div>

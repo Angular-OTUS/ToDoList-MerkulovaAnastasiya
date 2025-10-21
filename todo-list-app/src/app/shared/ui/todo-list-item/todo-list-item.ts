@@ -17,12 +17,12 @@ import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ValidatorErrorMessage } from '../../../services/validator-error-message/validator-error-message';
-import { ShowTooltip } from '../../../shared/directives/show-tooltip';
-import { EditTodoDto } from '../../../shared/types/dto/todo.dto';
-import { ITodoItem } from '../../../shared/types/todo-item.interface';
-import { Button } from '../../../shared/ui/button/button';
-import { TODO_STATUS, TOOLTIP_TEXT } from '../../../shared/util/constants';
-import { trimmedMinLength } from '../../../shared/validators/trimmed-minlength.validator';
+import { ShowTooltip } from '../../directives/show-tooltip';
+import { EditTodoDto } from '../../types/dto/todo.dto';
+import { ITodoItem } from '../../types/todo-item.interface';
+import { Button } from '../button/button';
+import { TODO_STATUS, TOOLTIP_TEXT } from '../../util/constants';
+import { trimmedMinLength } from '../../validators/trimmed-minlength.validator';
 
 @Component({
   selector: 'app-todo-list-item',

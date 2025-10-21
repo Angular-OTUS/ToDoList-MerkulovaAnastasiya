@@ -1,0 +1,17 @@
+.app-nav {
+  display: flex;
+  gap: 20px;
+  margin-block: 10px;
+  a {
+    font-size: 18px;
+    color: var(--mat-sys-on-primary-fixed);
+
+    &:hover {
+      color: var(--mat-sys-primary);
+    }
+    &.activated {
+      color: var(--mat-sys-on-tertiary-fixed-variant);
+      text-decoration: underline dashed;
+    }
+  }
+}

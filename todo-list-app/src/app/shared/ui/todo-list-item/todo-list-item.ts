@@ -16,13 +16,13 @@ import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angula
 import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { ValidatorErrorMessage } from '../../../services/validator-error-message/validator-error-message';
+import { TodosStateService } from '../../../services/todos-state/todos-state';
+import { ValidatorErrMessageService } from '../../../services/validator-error-message/validator-error-message';
 import { ShowTooltip } from '../../directives/show-tooltip';
-import { EditTodoDto } from '../../types/dto/todo.dto';
 import { ITodoItem } from '../../types/todo-item.interface';
-import { Button } from '../button/button';
 import { TODO_STATUS, TOOLTIP_TEXT } from '../../util/constants';
 import { trimmedMinLength } from '../../validators/trimmed-minlength.validator';
+import { Button } from '../button/button';
 
 @Component({
   selector: 'app-todo-list-item',
@@ -41,18 +41,17 @@ import { trimmedMinLength } from '../../validators/trimmed-minlength.validator';
 })
 export class TodoListItem {
   private readonly formBuilder: NonNullableFormBuilder = inject(NonNullableFormBuilder);
-  protected readonly errorService: ValidatorErrorMessage = inject(ValidatorErrorMessage);
+  protected readonly errorService: ValidatorErrMessageService = inject(ValidatorErrMessageService);
+  private readonly todosState: TodosStateService = inject(TodosStateService);
+
   protected TOOLTIP_TEXT = TOOLTIP_TEXT;
 
   public currentTodo: InputSignal<ITodoItem> = input.required<ITodoItem>();
   public selectedId: InputSignal<string | null> = input<string | null>(null);
-  public editingId: InputSignal<string | null> = input<string | null>(null);
+  protected editingItemId: Signal<string | null> = this.todosState.editingItemId;
 
-  protected updateCurrentTodo: OutputEmitterRef<EditTodoDto> = output<EditTodoDto>();
-  protected removeCurrentTodo: OutputEmitterRef<string> = output<string>();
+  protected onDeleteSuccess: OutputEmitterRef<string> = output<string>();
   protected clickCurrentTodo: OutputEmitterRef<string> = output<string>();
-  protected openEditing: OutputEmitterRef<string> = output<string>();
-  protected closeEditing: OutputEmitterRef<void> = output<void>();
 
   protected editTodoForm = this.formBuilder.group({
     text: this.formBuilder.control<string>('', [
@@ -66,7 +65,7 @@ export class TodoListItem {
     () => this.selectedId() === this.currentTodo().id
   );
 
-  protected isEditing: Signal<boolean> = computed(() => this.editingId() === this.currentTodo().id);
+  protected isEditing: Signal<boolean> = computed(() => this.editingItemId() === this.currentTodo().id);
 
   protected isCompleted: Signal<boolean> = computed(
     () => this.currentTodo().status === TODO_STATUS.COMPLETED
@@ -79,19 +78,19 @@ export class TodoListItem {
 
   protected handleOpenEditing(e: Event) {
     e.stopPropagation();
-    this.openEditing.emit(this.currentTodo().id);
+    this.todosState.toggleEditing(this.currentTodo().id);
     this.editTodoForm.controls.text.setValue(this.currentTodo().text);
   }
 
   protected handleCloseEditing() {
     this.editTodoForm.reset();
-    this.closeEditing.emit();
+    this.todosState.toggleEditing(null);
   }
 
   protected handleUpdateTodo(e: Event) {
     e.stopPropagation();
     if (this.editTodoForm.valid) {
-      this.updateCurrentTodo.emit({
+      this.todosState.updateTodo({
         ...this.currentTodo(),
         text: this.editTodoForm.controls.text.value,
       });
@@ -101,7 +100,8 @@ export class TodoListItem {
 
   protected handleRemoveTodo(e: Event, id: string) {
     e.stopPropagation();
-    this.removeCurrentTodo.emit(id);
+    this.todosState.deleteTodoById(id);
+    this.onDeleteSuccess.emit(id);
   }
 
   protected handleTodoClick(id: string) {
@@ -109,7 +109,7 @@ export class TodoListItem {
   }
 
   protected onCheckboxChange(e: MatCheckboxChange) {
-    this.updateCurrentTodo.emit({
+    this.todosState.updateTodo({
       ...this.currentTodo(),
       status: e.checked ? TODO_STATUS.COMPLETED : TODO_STATUS.INPROGRESS,
     });

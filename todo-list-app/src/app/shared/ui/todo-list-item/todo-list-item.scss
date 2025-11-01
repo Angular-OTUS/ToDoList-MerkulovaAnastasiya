@@ -7,7 +7,9 @@
   align-items: center;
   gap: 10px;
 }
-
+.todo-item-form {
+  width: 100%;
+}
 .todo-item {
   background-color: var(--mat-sys-tertiary-container);
   border-radius: 6px;

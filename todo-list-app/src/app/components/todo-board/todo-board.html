@@ -1,4 +1,5 @@
-<div class="container">
+<div class="todos-content">
+<section class="container board-container">
   <div class="header">
     <h1 class="headline">Todos Board</h1>
   </div>
@@ -6,28 +7,30 @@
   <app-loader></app-loader>
   } @else {
   <div class="todos-section">
-    <div>
+    <div class="todos-column">
       <h2>In progress</h2>
       <ul class="todos-list">
         @for (todo of inprogressTodos(); track todo.id) {
         <app-todo-list-item
           [currentTodo]="todo"
-          [selectedId]="null"
-          [editingId]="null"
+          [selectedId]="selectedItemId()"
+          (onDeleteSuccess)="onDeleteSuccess($event)"
+          (clickCurrentTodo)="selectTodoId($event)"
         ></app-todo-list-item>
         } @empty {
         <li>There are no items.</li>
         }
       </ul>
     </div>
-    <div>
+    <div class="todos-column">
       <h2>Completed</h2>
       <ul class="todos-list">
         @for (todo of completedTodos(); track todo.id) {
         <app-todo-list-item
           [currentTodo]="todo"
-          [selectedId]="null"
-          [editingId]="null"
+          [selectedId]="selectedItemId()"
+          (onDeleteSuccess)="onDeleteSuccess($event)"
+          (clickCurrentTodo)="selectTodoId($event)"
         ></app-todo-list-item>
         } @empty {
         <li>There are no items.</li>
@@ -36,4 +39,9 @@
     </div>
   </div>
   }
+    </section>
+
+  <section class="container" [class.hidden]="!showDetailsContainer()">
+    <router-outlet />
+  </section>
 </div>

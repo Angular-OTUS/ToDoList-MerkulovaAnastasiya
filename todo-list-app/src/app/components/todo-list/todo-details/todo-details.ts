@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, switchMap, tap } from 'rxjs';
-import { TodosApi } from '../../../services/todos-api/todos-api';
-import { APP_ROUTES } from '../../../shared/util/constants';
+import { ActivatedRoute } from '@angular/router';
+import { map } from 'rxjs';
+import { ITodoItem } from '../../../shared/types/todo-item.interface';
 
 @Component({
   selector: 'app-todo-details',
@@ -12,27 +11,12 @@ import { APP_ROUTES } from '../../../shared/util/constants';
   styleUrl: './todo-details.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TodoDetails implements OnDestroy {
-  private destroy$ = new Subject<void>();
+export class TodoDetails {
   private readonly activatedRoute = inject(ActivatedRoute);
-  private readonly todosApiService = inject(TodosApi);
-  private readonly router = inject(Router);
 
-  private readonly todo$ = toSignal(
-    this.activatedRoute.paramMap.pipe(
-      switchMap((params) => {
-        const id = params.get('id');
-        return id ? this.todosApiService.getTodoById(id) : [null];
-      }),
-      tap((todo) => {
-        if (!todo) this.router.navigate([APP_ROUTES.ERROR]);
-      })
-    )
+  private readonly todo = toSignal(
+    this.activatedRoute.data.pipe(map((data) => data['todo'] as ITodoItem | null))
   );
-  protected currentDescription = computed(() => this.todo$()?.description || null);
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
+  protected currentDescription = computed(() => this.todo()?.description || null);
 }

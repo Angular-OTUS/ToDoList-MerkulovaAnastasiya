@@ -1,46 +1,58 @@
-import { Component, computed, inject, OnDestroy, OnInit, Signal, signal, WritableSignal } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
-import { TodosApi } from '../../services/todos-api/todos-api';
+import { Component, computed, inject, OnDestroy, OnInit, Signal } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { Subject } from 'rxjs';
+import { TodosStateService } from '../../services/todos-state/todos-state';
 import { ITodoItem } from '../../shared/types/todo-item.interface';
-import { Loader } from "../../shared/ui/loader/loader";
+import { Loader } from '../../shared/ui/loader/loader';
 import { TodoListItem } from '../../shared/ui/todo-list-item/todo-list-item';
-import { TODO_STATUS } from '../../shared/util/constants';
+import { APP_ROUTES } from '../../shared/util/constants';
+import { RouteStateService } from '../../services/route-state/route-state';
 
 @Component({
   selector: 'app-todo-board',
-  imports: [TodoListItem, Loader],
+  imports: [TodoListItem, Loader, RouterOutlet],
   templateUrl: './todo-board.html',
-  styleUrl: './todo-board.scss'
+  styleUrl: './todo-board.scss',
 })
 export class TodoBoard implements OnInit, OnDestroy {
-  private destroy$ = new Subject<void>();
-  private readonly todosApiService = inject(TodosApi);
-  protected todos: WritableSignal<ITodoItem[]> = signal([]);
-  protected isLoading: WritableSignal<boolean> = signal(true);
+  private destroy$: Subject<void> = new Subject<void>();
+  private readonly todosState: TodosStateService = inject(TodosStateService);
+  private readonly routeState: RouteStateService = inject(RouteStateService);
 
-   protected completedTodos: Signal<ITodoItem[]> = computed(() => {
-    return [...this.todos()].filter((todo) => todo.status === TODO_STATUS.COMPLETED);
-  });
-   protected inprogressTodos: Signal<ITodoItem[]> = computed(() => {
-    return [...this.todos()].filter((todo) => todo.status === TODO_STATUS.INPROGRESS);
-  });
+  protected completedTodos: Signal<ITodoItem[]> = this.todosState.completedTodos;
+  protected inprogressTodos: Signal<ITodoItem[]> = this.todosState.incompleteTodos;
+  protected isLoading: Signal<boolean> = this.todosState.isLoading;
+  protected selectedItemId: Signal<string | null> = this.todosState.selectedItemId;
 
-  public ngOnInit(): void {
-    this.loadTodos();
+  protected showDetailsContainer = computed(() => !!this.selectedItemId());
+
+  ngOnInit(): void {
+    this.todosState.loadTodos();
+    this.setupRouteListener();
   }
-    public ngOnDestroy(): void {
+
+  ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.todosState.onDestroy();
   }
 
-  private loadTodos(): void {
-    this.isLoading.set(true);
-    this.todosApiService
-      .getAllTodos()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((todos) => {
-        this.todos.set(todos);
-        this.isLoading.set(false);
-      });
+  private setupRouteListener(): void {
+    this.routeState.setupRouteListener(
+      this.destroy$,
+      (id) => this.todosState.setSelectedItemId(id),
+      [APP_ROUTES.BOARD]
+    );
+  }
+
+  protected selectTodoId(id: string): void {
+    this.todosState.setSelectedItemId(id);
+    this.routeState.navigateWithId(APP_ROUTES.BOARD, id);
+  }
+
+  protected onDeleteSuccess(id: string): void {
+    if (this.selectedItemId() !== id) return;
+    this.todosState.setSelectedItemId(null);
+    this.routeState.navigateWithId(APP_ROUTES.BOARD, null);
   }
 }

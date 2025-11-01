@@ -16,11 +16,12 @@
         }}</mat-error>
         }
       </mat-form-field>
-      <mat-form-field class="form-input-wrapper">
+      <mat-form-field class="form-input-wrapper fixed-textarea">
         <textarea
           matInput
           placeholder="Todo description"
           formControlName="description"
+          rows="4"
           name="todo-description"
         ></textarea>
         @if (errorService.showErrorMessage(newTodoForm.controls.description)) {

@@ -10,7 +10,7 @@ import { ToastService } from '../toast/toast';
 @Injectable({
   providedIn: 'root',
 })
-export class TodosApi {
+export class TodosApiService {
   private readonly baseUrl: string = `${environment.baseApi}/todos`;
   private readonly http: HttpClient = inject(HttpClient);
   private readonly toastService: ToastService = inject(ToastService);

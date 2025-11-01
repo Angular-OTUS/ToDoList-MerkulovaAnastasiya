@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ValidatorErrorMessage } from './validator-error-message';
+import { ValidatorErrMessageService } from './validator-error-message';
 
-describe('ValidatorErrorMessage', () => {
-  let service: ValidatorErrorMessage;
+describe('ValidatorErrMessageService', () => {
+  let service: ValidatorErrMessageService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(ValidatorErrorMessage);
+    service = TestBed.inject(ValidatorErrMessageService);
   });
 
   it('should be created', () => {

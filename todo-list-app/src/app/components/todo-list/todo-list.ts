@@ -2,20 +2,19 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   inject,
-  OnDestroy,
   OnInit,
-  Signal,
+  Signal
 } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Subject } from 'rxjs';
+import { RouteStateService } from '../../services/route-state/route-state';
 import { TodosStateService } from '../../services/todos-state/todos-state';
 import { ITodoItem } from '../../shared/types/todo-item.interface';
 import { Loader } from '../../shared/ui/loader/loader';
 import { TodoListItem } from '../../shared/ui/todo-list-item/todo-list-item';
 import { APP_ROUTES } from '../../shared/util/constants';
 import { TodoFilter } from '../todo-filter/todo-filter';
-import { RouteStateService } from '../../services/route-state/route-state';
 
 @Component({
   selector: 'app-todo-list',
@@ -24,8 +23,8 @@ import { RouteStateService } from '../../services/route-state/route-state';
   styleUrl: './todo-list.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TodoList implements OnInit, OnDestroy {
-  private destroy$: Subject<void> = new Subject<void>();
+export class TodoList implements OnInit {
+  private readonly destroyRef = inject(DestroyRef);
   private readonly todosState: TodosStateService = inject(TodosStateService);
   private readonly routeState: RouteStateService = inject(RouteStateService);
 
@@ -42,15 +41,9 @@ export class TodoList implements OnInit, OnDestroy {
     this.setupRouteListener();
   }
 
-  public ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.todosState.onDestroy();
-  }
-
   private setupRouteListener(): void {
     this.routeState.setupRouteListener(
-      this.destroy$,
+      this.destroyRef,
       (id) => this.todosState.setSelectedItemId(id),
       [APP_ROUTES.TASKS]
     );

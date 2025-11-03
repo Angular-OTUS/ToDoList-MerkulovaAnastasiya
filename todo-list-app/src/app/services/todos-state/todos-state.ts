@@ -1,6 +1,6 @@
-import { computed, inject, Injectable, signal, WritableSignal } from '@angular/core';
-import { Subject } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
+import { computed, DestroyRef, inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { filter } from 'rxjs/operators';
 import { AddTodoDto, EditTodoDto } from '../../shared/types/dto/todo.dto';
 import { ITodoItem } from '../../shared/types/todo-item.interface';
 import { TodosApiService } from '../todos-api/todos-api';
@@ -9,7 +9,7 @@ import { TodosApiService } from '../todos-api/todos-api';
   providedIn: 'root',
 })
 export class TodosStateService {
-  private destroy$ = new Subject<void>();
+  private readonly destroyRef = inject(DestroyRef);
   private readonly todosApiService = inject(TodosApiService);
 
   public todos: WritableSignal<ITodoItem[]> = signal([]);
@@ -46,16 +46,11 @@ export class TodosStateService {
     return [...this.todos()].filter((todo) => todo.status === filter);
   });
 
-  public onDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
   public loadTodos(): void {
     this.isLoading.set(true);
     this.todosApiService
       .getAllTodos()
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((todos) => {
         this.todos.set(todos);
         this.isLoading.set(false);
@@ -84,7 +79,7 @@ export class TodosStateService {
       .addNewTodo(todoData)
       .pipe(
         filter((newTodo) => !!newTodo),
-        takeUntil(this.destroy$)
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((newTodo) => {
         this.todos.update((currentTodos) => [...currentTodos, newTodo]);
@@ -96,7 +91,7 @@ export class TodosStateService {
       .editTodo(data)
       .pipe(
         filter((updatedTodo) => !!updatedTodo),
-        takeUntil(this.destroy$)
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((updatedTodo) => {
         this.todos.update((currentTodos) =>
@@ -109,7 +104,7 @@ export class TodosStateService {
   public deleteTodoById(id: string): void {
     this.todosApiService
       .removeTodo(id)
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.todos.update((currentTodos) => currentTodos.filter((todo) => todo.id !== id));
 
@@ -121,5 +116,4 @@ export class TodosStateService {
         }
       });
   }
-
 }

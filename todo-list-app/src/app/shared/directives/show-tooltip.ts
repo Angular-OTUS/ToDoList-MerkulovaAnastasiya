@@ -14,7 +14,7 @@ import {
 export class ShowTooltip implements OnDestroy {
   private targetElementRef: ElementRef = inject(ElementRef);
   private tooltipElement: HTMLElement | null = null;
-  public tooltipText: InputSignal<string> = input.required<string>();
+  public tooltipText = input.required<string>();
 
   @HostListener('mouseenter') onMouseEnter() {
     this.showTooltip();

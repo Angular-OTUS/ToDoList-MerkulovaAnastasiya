@@ -19,10 +19,10 @@ type TAppButton = 'submit' | 'delete';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Button {
-  public type: InputSignal<TAppButton> = input.required<TAppButton>();
-  public isDisabled: InputSignal<boolean> = input<boolean>(false);
+  public type = input.required<TAppButton>();
+  public isDisabled = input<boolean>(false);
 
-  public action: OutputEmitterRef<Event> = output<Event>();
+  public action = output<Event>();
 
   public buttonClass: Signal<string> = computed(() =>
     this.type() === 'submit' ? 'add-button' : 'delete-button'

@@ -6,11 +6,9 @@ import {
   ElementRef,
   inject,
   input,
-  InputSignal,
   output,
-  OutputEmitterRef,
   Signal,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
@@ -46,12 +44,12 @@ export class TodoListItem {
 
   protected TOOLTIP_TEXT = TOOLTIP_TEXT;
 
-  public currentTodo: InputSignal<ITodoItem> = input.required<ITodoItem>();
-  public selectedId: InputSignal<string | null> = input<string | null>(null);
+  public currentTodo = input.required<ITodoItem>();
+  public selectedId = input<string | null>(null);
   protected editingItemId: Signal<string | null> = this.todosState.editingItemId;
 
-  protected onDeleteSuccess: OutputEmitterRef<string> = output<string>();
-  protected clickCurrentTodo: OutputEmitterRef<string> = output<string>();
+  protected onDeleteSuccess = output<string>();
+  protected clickCurrentTodo = output<string>();
 
   protected editTodoForm = this.formBuilder.group({
     text: this.formBuilder.control<string>('', [
@@ -65,7 +63,9 @@ export class TodoListItem {
     () => this.selectedId() === this.currentTodo().id
   );
 
-  protected isEditing: Signal<boolean> = computed(() => this.editingItemId() === this.currentTodo().id);
+  protected isEditing: Signal<boolean> = computed(
+    () => this.editingItemId() === this.currentTodo().id
+  );
 
   protected isCompleted: Signal<boolean> = computed(
     () => this.currentTodo().status === TODO_STATUS.COMPLETED

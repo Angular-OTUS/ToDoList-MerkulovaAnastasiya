@@ -4,7 +4,7 @@ import { AbstractControl } from '@angular/forms';
 @Injectable({
   providedIn: 'root',
 })
-export class ValidatorErrorMessage {
+export class ValidatorErrMessageService {
   public showErrorMessage(control: AbstractControl | null): boolean {
     return control ? control.invalid && (control.touched || control.dirty) : false;
   }

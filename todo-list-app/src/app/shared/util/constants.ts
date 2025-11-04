@@ -33,6 +33,14 @@ export const TODO_STATUS = {
 export const APP_ROUTES = {
   MAIN: '',
   TASKS: 'tasks',
+  BOARD: 'board',
   TASK_DETAILS: ':id',
   ERROR: '**',
+} as const;
+
+export const ROUTE_TITLES = {
+  MAIN: 'Main',
+  BACKLOG: 'Backlog',
+  BOARD: 'Board',
+  ERROR: 'Error',
 } as const;

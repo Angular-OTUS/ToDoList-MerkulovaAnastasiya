@@ -1,5 +1,5 @@
 <div class="toast-container">
-  @for (toast of toasts(); track toast.id) {
+  @for (toast of toasts$|async; track toast.id) {
   <div [class]="getToastClassString(toast)">
     <div class="toast-content">
       <mat-icon class="toast-icon">{{ toastIcons[toast.variant] }}</mat-icon>

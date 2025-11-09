@@ -16,7 +16,7 @@ export class ToastContainer {
   private readonly toastService = inject(ToastService);
   protected readonly toastIcons = TOAST_ICONS;
 
-  protected toasts = computed(() => this.toastService.allToasts());
+  protected toasts$ = this.toastService.allToasts$;
 
   protected removeToast(id: number): void {
     this.toastService.removeToast(id);

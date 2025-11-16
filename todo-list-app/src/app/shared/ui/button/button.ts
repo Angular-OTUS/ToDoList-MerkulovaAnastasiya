@@ -1,13 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-  InputSignal,
-  output,
-  OutputEmitterRef,
-  Signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output, Signal } from '@angular/core';
 
 type TAppButton = 'submit' | 'delete';
 
@@ -25,7 +16,7 @@ export class Button {
   public action = output<Event>();
 
   public buttonClass: Signal<string> = computed(() =>
-    this.type() === 'submit' ? 'add-button' : 'delete-button'
+    this.type() === 'submit' ? 'add-button' : 'delete-button',
   );
 
   public handleClick(event: Event) {

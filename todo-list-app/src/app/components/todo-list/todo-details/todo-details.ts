@@ -15,7 +15,7 @@ export class TodoDetails {
   private readonly activatedRoute = inject(ActivatedRoute);
 
   private readonly todo = toSignal(
-    this.activatedRoute.data.pipe(map((data) => data['todo'] as ITodoItem | null))
+    this.activatedRoute.data.pipe(map((data) => data['todo'] as ITodoItem | null)),
   );
 
   protected currentDescription = computed(() => this.todo()?.description || null);

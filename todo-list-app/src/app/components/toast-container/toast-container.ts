@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { ToastService } from '../../services/toast/toast';
-import { TOAST_ICONS } from '../../shared/util/constants';
 import { IToast } from '../../shared/types/toast.interface';
+import { TOAST_ICONS } from '../../shared/util/constants';
 
 @Component({
   selector: 'app-toast-container',

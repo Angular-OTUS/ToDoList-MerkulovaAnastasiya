@@ -16,13 +16,13 @@ import {
 } from '@ngrx/signals';
 import { of, pipe } from 'rxjs';
 
-type TodosState = {
+interface TodosState {
   todos: ITodoItem[];
   isLoading: boolean;
   selectedItemId: string | null;
   editingItemId: string | null;
   filterValue: string | null;
-};
+}
 
 const initialState: TodosState = {
   todos: [],
@@ -69,10 +69,10 @@ export const TodosStore = signalStore(
               catchError(() => {
                 patchState(store, { isLoading: false });
                 return of([]);
-              })
-            )
-          )
-        )
+              }),
+            ),
+          ),
+        ),
       ),
       addNewTodo: rxMethod<AddTodoDto>(
         pipe(
@@ -93,10 +93,10 @@ export const TodosStore = signalStore(
               catchError(() => {
                 patchState(store, { isLoading: false });
                 return of(null);
-              })
+              }),
             );
-          })
-        )
+          }),
+        ),
       ),
       updateTodo: rxMethod<EditTodoDto>(
         pipe(
@@ -107,7 +107,7 @@ export const TodosStore = signalStore(
                 if (updatedTodo) {
                   patchState(store, (state) => ({
                     todos: state.todos.map((todo) =>
-                      todo.id === updatedTodo.id ? updatedTodo : todo
+                      todo.id === updatedTodo.id ? updatedTodo : todo,
                     ),
                     editingItemId: null,
                     isLoading: false,
@@ -119,10 +119,10 @@ export const TodosStore = signalStore(
               catchError(() => {
                 patchState(store, { isLoading: false });
                 return of(null);
-              })
+              }),
             );
-          })
-        )
+          }),
+        ),
       ),
       deleteTodoById(id: string) {
         const originalTodos = store.todos();
@@ -138,7 +138,7 @@ export const TodosStore = signalStore(
             catchError(() => {
               patchState(store, { todos: originalTodos });
               return of(null);
-            })
+            }),
           )
           .subscribe();
       },
@@ -148,5 +148,5 @@ export const TodosStore = signalStore(
     onInit(store) {
       store.loadTodos();
     },
-  })
+  }),
 );

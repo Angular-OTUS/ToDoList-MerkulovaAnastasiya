@@ -1,24 +1,24 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { AddToastDto } from '../../shared/types/dto/toast.dto';
 import { IToast } from '../../shared/types/toast.interface';
 import { generateNextId } from '../../shared/util/helpers';
-import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ToastService {
-  private timeouts = new Map<number, number>();
+  private timeouts = new Map<number, ReturnType<typeof setTimeout>>();
 
   private toastsSubject = new BehaviorSubject<IToast[]>([]);
   public allToasts$ = this.toastsSubject.asObservable();
 
-  public getToasts (){
+  public getToasts() {
     return this.toastsSubject.getValue();
   }
 
   public addToast(newToast: AddToastDto) {
-    const currentToasts = this.getToasts()
+    const currentToasts = this.getToasts();
     const newId = generateNextId(currentToasts);
 
     this.toastsSubject.next([...currentToasts, { ...newToast, id: newId }]);
@@ -27,7 +27,7 @@ export class ToastService {
   }
 
   public removeToast(id: number) {
-    const currentToasts = this.getToasts()
+    const currentToasts = this.getToasts();
     const timeoutId = this.timeouts.get(id);
 
     this.toastsSubject.next(currentToasts.filter((toast) => toast.id !== id));

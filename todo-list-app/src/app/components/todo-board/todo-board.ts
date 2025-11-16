@@ -22,7 +22,7 @@ export class TodoBoard {
     this.routeState.setupRouteListener(
       inject(DestroyRef),
       (id) => this.todosStore.setSelectedItemId(id),
-      [APP_ROUTES.BOARD]
+      [APP_ROUTES.BOARD],
     );
 
     effect(() => {

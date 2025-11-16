@@ -1,12 +1,4 @@
-import {
-  Directive,
-  ElementRef,
-  HostListener,
-  inject,
-  input,
-  InputSignal,
-  OnDestroy,
-} from '@angular/core';
+import { Directive, ElementRef, HostListener, inject, input, OnDestroy } from '@angular/core';
 
 @Directive({
   selector: '[appShowTooltip]',

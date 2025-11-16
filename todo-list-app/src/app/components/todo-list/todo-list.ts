@@ -31,7 +31,7 @@ export class TodoList {
     this.routeState.setupRouteListener(
       inject(DestroyRef),
       (id) => this.todosStore.setSelectedItemId(id),
-      [APP_ROUTES.TASKS]
+      [APP_ROUTES.TASKS],
     );
 
     effect(() => {

@@ -2,19 +2,16 @@
   <section class="container todos-container">
     <div class="header">
       <h1 class="headline">Todo List</h1>
-      <app-todo-filter [value]="filterValue()" (valueChange)="onFilterChange($event)" />
+      <app-todo-filter [value]="todosStore.filterValue()" (valueChange)="onFilterChange($event)" />
     </div>
-    @if (isLoading()) {
+    @if (todosStore.isLoading()) {
     <app-loader></app-loader>
     } @else {
     <div class="todos-section">
       <ul class="todos-list">
-        @for (todo of filteredTodos(); track todo.id) {
+        @for (todo of todosStore.filteredTodos(); track todo.id) {
         <app-todo-list-item
           [currentTodo]="todo"
-          [selectedId]="selectedItemId()"
-          (onDeleteSuccess)="onDeleteSuccess($event)"
-          (clickCurrentTodo)="selectTodoId($event)"
         ></app-todo-list-item>
         } @empty {
         <li>There are no items. Type new task or change filter.</li>

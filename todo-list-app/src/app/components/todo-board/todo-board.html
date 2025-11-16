@@ -3,19 +3,16 @@
   <div class="header">
     <h1 class="headline">Todos Board</h1>
   </div>
-  @if (isLoading()) {
+  @if (todosStore.isLoading()) {
   <app-loader></app-loader>
   } @else {
   <div class="todos-section">
     <div class="todos-column">
       <h2>In progress</h2>
       <ul class="todos-list">
-        @for (todo of inprogressTodos(); track todo.id) {
+        @for (todo of todosStore.incompleteTodos(); track todo.id) {
         <app-todo-list-item
           [currentTodo]="todo"
-          [selectedId]="selectedItemId()"
-          (onDeleteSuccess)="onDeleteSuccess($event)"
-          (clickCurrentTodo)="selectTodoId($event)"
         ></app-todo-list-item>
         } @empty {
         <li>There are no items.</li>
@@ -25,12 +22,9 @@
     <div class="todos-column">
       <h2>Completed</h2>
       <ul class="todos-list">
-        @for (todo of completedTodos(); track todo.id) {
+        @for (todo of todosStore.completedTodos(); track todo.id) {
         <app-todo-list-item
           [currentTodo]="todo"
-          [selectedId]="selectedItemId()"
-          (onDeleteSuccess)="onDeleteSuccess($event)"
-          (clickCurrentTodo)="selectTodoId($event)"
         ></app-todo-list-item>
         } @empty {
         <li>There are no items.</li>

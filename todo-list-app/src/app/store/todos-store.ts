@@ -123,7 +123,6 @@ export const TodosStore = signalStore(
       deleteTodoById: rxMethod<string>(
         pipe(
           switchMap((id) => {
-            const originalTodos = store.todos();
             patchState(store, (state) => ({
               todos: state.todos.filter((todo) => todo.id !== id),
               editingItemId: state.editingItemId === id ? null : state.editingItemId,
@@ -132,7 +131,7 @@ export const TodosStore = signalStore(
 
             return todosApiService.removeTodo(id).pipe(
               catchError(() => {
-                patchState(store, { todos: originalTodos });
+                patchState(store, { todos: store.todos() });
                 return of(null);
               })
             );

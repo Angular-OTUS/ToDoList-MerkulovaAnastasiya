@@ -8,11 +8,11 @@ import {
 } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { RouteStateService } from '../../services/route-state/route-state';
-import { TodosStore } from '../../services/todos-state/todos-store';
 import { Loader } from '../../shared/ui/loader/loader';
 import { TodoListItem } from '../../shared/ui/todo-list-item/todo-list-item';
 import { APP_ROUTES } from '../../shared/util/constants';
 import { TodoFilter } from '../todo-filter/todo-filter';
+import { TodosStore } from '../../store/todos-store';
 
 @Component({
   selector: 'app-todo-list',
@@ -31,7 +31,7 @@ export class TodoList {
     this.routeState.setupRouteListener(
       inject(DestroyRef),
       (id) => this.todosStore.setSelectedItemId(id),
-      [APP_ROUTES.TASKS],
+      [APP_ROUTES.TASKS]
     );
 
     effect(() => {

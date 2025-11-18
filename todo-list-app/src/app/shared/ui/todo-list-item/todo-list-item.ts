@@ -14,7 +14,7 @@ import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angula
 import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { TodosStore } from '../../../services/todos-state/todos-store';
+import { TodosStore } from '../../../store/todos-store';
 import { ValidatorErrMessageService } from '../../../services/validator-error-message/validator-error-message';
 import { ShowTooltip } from '../../directives/show-tooltip';
 import { ITodoItem } from '../../types/todo-item.interface';
@@ -55,15 +55,15 @@ export class TodoListItem {
   });
 
   protected isSelected: Signal<boolean> = computed(
-    () => this.todosStore.selectedItemId() === this.currentTodo().id,
+    () => this.todosStore.selectedItemId() === this.currentTodo().id
   );
 
   protected isEditing: Signal<boolean> = computed(
-    () => this.todosStore.editingItemId() === this.currentTodo().id,
+    () => this.todosStore.editingItemId() === this.currentTodo().id
   );
 
   protected isCompleted: Signal<boolean> = computed(
-    () => this.currentTodo().status === TODO_STATUS.COMPLETED,
+    () => this.currentTodo().status === TODO_STATUS.COMPLETED
   );
 
   private readonly editInputRef = viewChild<ElementRef<HTMLInputElement>>('editInput');

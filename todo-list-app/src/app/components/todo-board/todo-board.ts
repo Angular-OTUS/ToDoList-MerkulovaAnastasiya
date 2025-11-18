@@ -1,10 +1,10 @@
 import { Component, computed, DestroyRef, effect, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { RouteStateService } from '../../services/route-state/route-state';
-import { TodosStore } from '../../services/todos-state/todos-store';
 import { Loader } from '../../shared/ui/loader/loader';
 import { TodoListItem } from '../../shared/ui/todo-list-item/todo-list-item';
 import { APP_ROUTES } from '../../shared/util/constants';
+import { TodosStore } from '../../store/todos-store';
 
 @Component({
   selector: 'app-todo-board',
@@ -22,7 +22,7 @@ export class TodoBoard {
     this.routeState.setupRouteListener(
       inject(DestroyRef),
       (id) => this.todosStore.setSelectedItemId(id),
-      [APP_ROUTES.BOARD],
+      [APP_ROUTES.BOARD]
     );
 
     effect(() => {

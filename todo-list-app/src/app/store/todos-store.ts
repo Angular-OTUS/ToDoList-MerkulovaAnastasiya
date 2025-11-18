@@ -1,10 +1,6 @@
-import { computed, DestroyRef, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { computed, inject } from '@angular/core';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { catchError, switchMap, tap } from 'rxjs/operators';
-import { AddTodoDto, EditTodoDto } from '../../shared/types/dto/todo.dto';
-import { ITodoItem } from '../../shared/types/todo-item.interface';
-import { TodosApiService } from '../todos-api/todos-api';
 
 import {
   patchState,
@@ -15,6 +11,9 @@ import {
   withState,
 } from '@ngrx/signals';
 import { of, pipe } from 'rxjs';
+import { TodosApiService } from '../services/todos-api/todos-api';
+import { AddTodoDto, EditTodoDto } from '../shared/types/dto/todo.dto';
+import { ITodoItem } from '../shared/types/todo-item.interface';
 
 interface TodosState {
   todos: ITodoItem[];
@@ -51,10 +50,7 @@ export const TodosStore = signalStore(
       return !filter ? todos() : todos().filter((todo) => todo.status === filter);
     }),
   })),
-  withMethods((store) => {
-    const todosApiService = inject(TodosApiService);
-    const destroyRef = inject(DestroyRef);
-
+  withMethods((store, todosApiService = inject(TodosApiService)) => {
     return {
       setSelectedItemId: (selectedItemId: string | null) => patchState(store, { selectedItemId }),
       setEditingItemId: (editingItemId: string | null) => patchState(store, { editingItemId }),
@@ -69,10 +65,10 @@ export const TodosStore = signalStore(
               catchError(() => {
                 patchState(store, { isLoading: false });
                 return of([]);
-              }),
-            ),
-          ),
-        ),
+              })
+            )
+          )
+        )
       ),
       addNewTodo: rxMethod<AddTodoDto>(
         pipe(
@@ -93,10 +89,10 @@ export const TodosStore = signalStore(
               catchError(() => {
                 patchState(store, { isLoading: false });
                 return of(null);
-              }),
+              })
             );
-          }),
-        ),
+          })
+        )
       ),
       updateTodo: rxMethod<EditTodoDto>(
         pipe(
@@ -107,7 +103,7 @@ export const TodosStore = signalStore(
                 if (updatedTodo) {
                   patchState(store, (state) => ({
                     todos: state.todos.map((todo) =>
-                      todo.id === updatedTodo.id ? updatedTodo : todo,
+                      todo.id === updatedTodo.id ? updatedTodo : todo
                     ),
                     editingItemId: null,
                     isLoading: false,
@@ -119,34 +115,35 @@ export const TodosStore = signalStore(
               catchError(() => {
                 patchState(store, { isLoading: false });
                 return of(null);
-              }),
+              })
             );
-          }),
-        ),
+          })
+        )
       ),
-      deleteTodoById(id: string) {
-        const originalTodos = store.todos();
-        patchState(store, (state) => ({
-          todos: state.todos.filter((todo) => todo.id !== id),
-          editingItemId: state.editingItemId === id ? null : state.editingItemId,
-          selectedItemId: state.selectedItemId === id ? null : state.selectedItemId,
-        }));
-        todosApiService
-          .removeTodo(id)
-          .pipe(
-            takeUntilDestroyed(destroyRef),
-            catchError(() => {
-              patchState(store, { todos: originalTodos });
-              return of(null);
-            }),
-          )
-          .subscribe();
-      },
+      deleteTodoById: rxMethod<string>(
+        pipe(
+          switchMap((id) => {
+            const originalTodos = store.todos();
+            patchState(store, (state) => ({
+              todos: state.todos.filter((todo) => todo.id !== id),
+              editingItemId: state.editingItemId === id ? null : state.editingItemId,
+              selectedItemId: state.selectedItemId === id ? null : state.selectedItemId,
+            }));
+
+            return todosApiService.removeTodo(id).pipe(
+              catchError(() => {
+                patchState(store, { todos: originalTodos });
+                return of(null);
+              })
+            );
+          })
+        )
+      ),
     };
   }),
   withHooks({
     onInit(store) {
       store.loadTodos();
     },
-  }),
+  })
 );

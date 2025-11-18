@@ -8,7 +8,7 @@ import { ShowTooltip } from '../../../shared/directives/show-tooltip';
 import { Button } from '../../../shared/ui/button/button';
 import { TOOLTIP_TEXT } from '../../../shared/util/constants';
 import { trimmedMinLength } from '../../../shared/validators/trimmed-minlength.validator';
-import { TodosStore } from '../../../services/todos-state/todos-store';
+import { TodosStore } from '../../../store/todos-store';
 
 @Component({
   selector: 'app-todo-form',

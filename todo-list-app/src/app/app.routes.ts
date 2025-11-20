@@ -21,8 +21,8 @@ export const routes: Routes = [
             (c) => c.TodoDetails,
           ),
           resolve:{
-            todo:TodoResolver
-          }
+            todo:TodoResolver,
+          },
       },
     ],
   },
@@ -37,8 +37,8 @@ export const routes: Routes = [
             (c) => c.TodoDetails,
           ),
           resolve:{
-            todo:TodoResolver
-          }
+            todo:TodoResolver,
+          },
       },
     ],
   },

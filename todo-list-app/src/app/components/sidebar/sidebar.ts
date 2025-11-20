@@ -7,7 +7,7 @@ import { TodoForm } from './todo-form/todo-form';
   selector: 'app-sidebar',
   imports: [Nav, TodoForm, MatIcon],
   templateUrl: './sidebar.html',
-  styleUrl: './sidebar.scss'
+  styleUrl: './sidebar.scss',
 })
 export class Sidebar {
 

@@ -8,7 +8,7 @@ describe('TodoBoard', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TodoBoard]
+      imports: [TodoBoard],
     })
     .compileComponents();
 

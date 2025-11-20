@@ -7,7 +7,7 @@ import { APP_ROUTES } from '../util/constants';
 
 
 export const TodoResolver : ResolveFn<ITodoItem | null> = (
-  route: ActivatedRouteSnapshot
+  route: ActivatedRouteSnapshot,
 ) => {
   const todosApiService = inject(TodosApiService);
   const router = inject(Router);
@@ -30,6 +30,6 @@ export const TodoResolver : ResolveFn<ITodoItem | null> = (
     catchError(() => {
       router.navigate([APP_ROUTES.ERROR]);
       return of(null);
-    })
+    }),
   );
 };

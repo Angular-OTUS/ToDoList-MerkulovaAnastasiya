@@ -1,4 +1,5 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { AddToastDto } from '../../shared/types/dto/toast.dto';
 import { IToast } from '../../shared/types/toast.interface';
 import { generateNextId } from '../../shared/util/helpers';
@@ -7,24 +8,29 @@ import { generateNextId } from '../../shared/util/helpers';
   providedIn: 'root',
 })
 export class ToastService {
-  private toasts = signal<IToast[]>([]);
-  private timeouts = new Map<number, number>();
+  private timeouts = new Map<number, ReturnType<typeof setTimeout>>();
 
-  public allToasts = computed(() => this.toasts());
+  private toastsSubject = new BehaviorSubject<IToast[]>([]);
+  public allToasts$ = this.toastsSubject.asObservable();
+
+  public getToasts() {
+    return this.toastsSubject.getValue();
+  }
 
   public addToast(newToast: AddToastDto) {
-    const newId = generateNextId(this.toasts());
+    const currentToasts = this.getToasts();
+    const newId = generateNextId(currentToasts);
 
-    this.toasts.update((currentToasts) => [...currentToasts, { ...newToast, id: newId }]);
-
+    this.toastsSubject.next([...currentToasts, { ...newToast, id: newId }]);
     const timeoutId = setTimeout(() => this.removeToast(newId), 5000);
     this.timeouts.set(newId, timeoutId);
   }
 
   public removeToast(id: number) {
+    const currentToasts = this.getToasts();
     const timeoutId = this.timeouts.get(id);
 
-    this.toasts.update((currentToasts) => currentToasts.filter((toast) => toast.id !== id));
+    this.toastsSubject.next(currentToasts.filter((toast) => toast.id !== id));
 
     if (timeoutId) {
       clearTimeout(timeoutId);

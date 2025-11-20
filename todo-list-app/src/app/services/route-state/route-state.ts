@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RouteStateService {
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -13,12 +13,12 @@ export class RouteStateService {
   public setupRouteListener(
     destroyRef: DestroyRef,
     onIdChange: (id: string | null) => void,
-    cleanupRoutes: string[] = []
+    cleanupRoutes: string[] = [],
   ): void {
     this.activatedRoute.firstChild?.paramMap
       .pipe(
         takeUntilDestroyed(destroyRef),
-        map((params) => params.get('id'))
+        map((params) => params.get('id')),
       )
       .subscribe((id) => onIdChange(id));
 
@@ -27,7 +27,7 @@ export class RouteStateService {
       .subscribe(() => {
         const currentUrl = this.router.url;
         const shouldCleanup = cleanupRoutes.some(route =>
-          !currentUrl.includes(route)
+          !currentUrl.includes(route),
         );
 
         if (shouldCleanup) {

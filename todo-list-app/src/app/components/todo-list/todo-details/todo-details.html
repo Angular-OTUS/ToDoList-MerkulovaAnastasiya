@@ -1,8 +1,8 @@
-    <div>
-      @if(currentDescription() !== null){
-      <div class="todo-details">
-        <h3>Description</h3>
-        <p>{{ currentDescription() }}</p>
-      </div>
-      }
-    </div>
+<div>
+  @if(currentDescription() !== null){
+  <div class="todo-details">
+    <h3>{{ 'common.description' | transloco }}</h3>
+    <p>{{ currentDescription() }}</p>
+  </div>
+  }
+</div>

@@ -1,0 +1,45 @@
+{
+  "common": {
+    "appTitle": "TasksBoard",
+    "taskList": "Todo list",
+    "taskBoard": "Todo board",
+    "emptyList": "There are no items. Type new task or change filter.",
+    "description": "Description"
+  },
+  "todoForm": {
+    "title": "Add new todo",
+    "placeholderTitle": "Todo title",
+    "placeholderDescription": "Todo description",
+    "addButton": "Add task"
+  },
+  "filters": {
+    "title": "Status",
+    "all": "All",
+    "inProgress": "In progress",
+    "completed": "Completed"
+  },
+  "todoItem": {
+    "deleteButton": "Delete",
+    "saveButton": "Save",
+    "editPlaceholder": "Todo title"
+  },
+  "validation": {
+    "required": "{{fieldName}} is required.",
+    "minLength": "{{ fieldName }} must be at least {{requiredLength}} characters long.",
+    "maxLength": "{{ fieldName }}cannot exceed {{requiredLength}} characters.",
+    "genericInvalid": "{{fieldName}} is invalid."
+  },
+  "toasts": {
+    "addTodoSuccess": "Todo successfully saved.",
+    "deleteTodoSuccess": "Todo was removed.",
+    "updateTodoSuccess": "Todo was updated.",
+    "failedToManageTodo": "Failed to manage todo.",
+    "failedToFetchTodos": "Failed to fetch todos."
+  },
+  "tooltips": {
+    "showDescription": "Show description. Double click opens editor.",
+    "saveTodo": "Save todo",
+    "removeTodo": "Remove todo",
+    "saveTitle": "Save new title"
+  }
+}

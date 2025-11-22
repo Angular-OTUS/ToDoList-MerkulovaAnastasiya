@@ -1,39 +1,39 @@
 <div class="todos-content">
-<section class="container board-container">
-  <div class="header">
-    <h1 class="headline">Todos Board</h1>
-  </div>
-  @if (todosStore.isLoading()) {
-  <app-loader></app-loader>
-  } @else {
-  <div class="todos-section">
-    <div class="todos-column">
-      <h2>In progress</h2>
-      <ul class="todos-list">
-        @for (todo of todosStore.incompleteTodos(); track todo.id) {
-        <app-todo-list-item
-          [currentTodo]="todo"
-        ></app-todo-list-item>
-        } @empty {
-        <li>There are no items.</li>
-        }
-      </ul>
+  <section class="container board-container">
+    <div class="header">
+      <h1 class="headline">{{ 'common.taskBoard' | transloco }}</h1>
     </div>
-    <div class="todos-column">
-      <h2>Completed</h2>
-      <ul class="todos-list">
-        @for (todo of todosStore.completedTodos(); track todo.id) {
-        <app-todo-list-item
-          [currentTodo]="todo"
-        ></app-todo-list-item>
-        } @empty {
-        <li>There are no items.</li>
-        }
-      </ul>
+    @if (todosStore.isLoading()) {
+    <app-loader></app-loader>
+    } @else {
+    <div class="todos-section">
+      <div class="todos-column">
+        <h2>{{ 'filters.inProgress' | transloco }}</h2>
+        <ul class="todos-list">
+          @for (todo of todosStore.incompleteTodos(); track todo.id) {
+          <app-todo-list-item
+            [currentTodo]="todo"
+          ></app-todo-list-item>
+          } @empty {
+          <li>{{ 'common.emptyList' | transloco }}</li>
+          }
+        </ul>
+      </div>
+      <div class="todos-column">
+        <h2>{{ 'filters.completed' | transloco }}</h2>
+        <ul class="todos-list">
+          @for (todo of todosStore.completedTodos(); track todo.id) {
+          <app-todo-list-item
+            [currentTodo]="todo"
+          ></app-todo-list-item>
+          } @empty {
+          <li>{{ 'common.emptyList' | transloco }}</li>
+          }
+        </ul>
+      </div>
     </div>
-  </div>
-  }
-    </section>
+    }
+  </section>
 
   <section class="container" [class.hidden]="!showDetailsContainer()">
     <router-outlet />

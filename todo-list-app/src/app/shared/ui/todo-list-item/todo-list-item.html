@@ -21,7 +21,7 @@
   <span
     class="todo-text"
     appShowTooltip
-    [tooltipText]="TOOLTIP_TEXT.LIST_ITEM"
+    [tooltipText]="TOOLTIP_TEXT.LIST_ITEM | transloco"
     (dblclick)="handleOpenEditing($event)"
     >{{ currentTodo().text }}</span
   >
@@ -29,8 +29,8 @@
     type="delete"
     (action)="handleRemoveTodo($event, currentTodo().id)"
     appShowTooltip
-    [tooltipText]="TOOLTIP_TEXT.DELETE_BUTTON"
-    >Delete</app-button
+    [tooltipText]="TOOLTIP_TEXT.DELETE_BUTTON | transloco"
+    >{{ 'todoItem.deleteButton' | transloco }}</app-button
   >
 </ng-template>
 
@@ -42,7 +42,7 @@
         #editInput
         type="text"
         matInput
-        placeholder="Todo title"
+        [placeholder]="'todoItem.editPlaceholder' | transloco"
         formControlName="text"
         (keydown)="handleKeydownPress($event)"
       />
@@ -55,10 +55,10 @@
       type="submit"
       (action)="handleUpdateTodo($event)"
       appShowTooltip
-      [tooltipText]="TOOLTIP_TEXT.SAVE_TITLE"
+      [tooltipText]="TOOLTIP_TEXT.SAVE_TITLE | transloco"
       [isDisabled]="editTodoForm.invalid"
     >
-      Save</app-button
+      {{ 'todoItem.saveButton' | transloco }}</app-button
     >
   </form>
 </ng-template>

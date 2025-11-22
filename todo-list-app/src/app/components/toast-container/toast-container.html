@@ -3,7 +3,7 @@
   <div [class]="getToastClassString(toast)">
     <div class="toast-content">
       <mat-icon class="toast-icon">{{ toastIcons[toast.variant] }}</mat-icon>
-      <span class="toast-message">{{ toast.message }}</span>
+      <span class="toast-message">{{ toast.message | transloco }}</span>
     </div>
     <button matIconButton class="toast-close-btn" (click)="removeToast(toast.id)">
       <mat-icon>close_small</mat-icon>

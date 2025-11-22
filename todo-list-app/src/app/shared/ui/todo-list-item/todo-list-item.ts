@@ -21,6 +21,7 @@ import { ITodoItem } from '../../types/todo-item.interface';
 import { TODO_STATUS, TOOLTIP_TEXT } from '../../util/constants';
 import { trimmedMinLength } from '../../validators/trimmed-minlength.validator';
 import { Button } from '../button/button';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-todo-list-item',
@@ -32,6 +33,7 @@ import { Button } from '../button/button';
     MatInputModule,
     MatCheckboxModule,
     ReactiveFormsModule,
+    TranslocoModule,
   ],
   templateUrl: './todo-list-item.html',
   styleUrl: './todo-list-item.scss',

@@ -1,0 +1,45 @@
+{
+  "common": {
+    "appTitle": "Доска Задач",
+    "taskList": "Список задач",
+    "taskBoard": "Доска задач",
+    "emptyList": "Нет элементов. Введите новую задачу или измените фильтр",
+    "description": "Описание"
+  },
+  "todoForm": {
+    "title": "Добавить новую задачу",
+    "placeholderTitle": "Заголовок задачи",
+    "placeholderDescription": "Описание задачи",
+    "addButton": "Добавить задачу"
+  },
+  "filters": {
+    "title": "Статус",
+    "all": "Все",
+    "inProgress": "В процессе",
+    "completed": "Завершено"
+  },
+  "todoItem": {
+    "deleteButton": "Удалить",
+    "saveButton": "Сохранить",
+    "editPlaceholder": "Заголовок задачи"
+  },
+  "validation": {
+    "required": "Поле «{{fieldName}}» обязательно для заполнения.",
+    "minLength": "Длина поля «{{fieldName}}» должна быть не менее {{requiredLength}} символов.",
+    "maxLength": "Длина поля «{fieldName}» не должна превышать {{requiredLength}} символов.",
+    "genericInvalid": "Поле «{{fieldName}}» заполнено неверно."
+  },
+  "toasts": {
+    "addTodoSuccess": "Задача успешно сохранена.",
+    "deleteTodoSuccess": "Задача была удалена.",
+    "updateTodoSuccess": "Задача была обновлена.",
+    "failedToManageTodo": "Не удалось получить задачу.",
+    "failedToFetchTodos": "Не удалось получить список задач."
+  },
+  "tooltips": {
+    "showDescription": "Показать описание. Двойной клик откроет редактор.",
+    "saveTodo": "Сохранить задачу",
+    "removeTodo": "Удалить задачу",
+    "saveTitle": "Сохранить новый заголовок"
+  }
+}

@@ -1,16 +1,16 @@
 export const TOOLTIP_TEXT = {
-  LIST_ITEM: 'Show description. Double click opens editor.',
-  ADD_BUTTON: 'Save todo',
-  DELETE_BUTTON: 'Remove todo',
-  SAVE_TITLE: 'Save new title',
+  LIST_ITEM: 'tooltips.showDescription',
+  ADD_BUTTON: 'tooltips.saveTodo',
+  DELETE_BUTTON: 'tooltips.removeTodo',
+  SAVE_TITLE: 'tooltips.saveTitle',
 } as const;
 
 export const TOAST_TEXT = {
-  ADD_TODO: 'Todo successfully saved',
-  DELETE_TODO: 'Todo was removed',
-  UPDATE_TODO: 'Todo was updated',
-  ERROR_TODO: 'Failed to manage todo',
-  ERROR_TODOS: 'Failed to fetch todos',
+  ADD_TODO: 'toasts.addTodoSuccess',
+  DELETE_TODO: 'toasts.deleteTodoSuccess',
+  UPDATE_TODO: 'toasts.updateTodoSuccess',
+  ERROR_TODO: 'toasts.failedToManageTodo',
+  ERROR_TODOS: 'toasts.failedToFetchTodos',
 } as const;
 
 export const TOAST_VARIANT = {
@@ -23,10 +23,10 @@ export const TOAST_ICONS = {
   [TOAST_VARIANT.ERROR]: 'error',
 } as const;
 
-export const DEFAULT_FILTER_STATUS='ALL'
+export const DEFAULT_FILTER_STATUS = 'ALL';
 
 export const TODO_STATUS = {
-  INPROGRESS : 'InProgress',
+  INPROGRESS: 'InProgress',
   COMPLETED: 'Completed',
 } as const;
 

@@ -1,4 +1,15 @@
 <div class="app-nav">
-  <a [routerLink]="APP_ROUTES.TASKS" routerLinkActive="activated">Todo list</a>
-  <a [routerLink]="APP_ROUTES.BOARD" routerLinkActive="activated">Todo board</a>
+<a [routerLink]="APP_ROUTES.TASKS" routerLinkActive="activated">{{ 'common.taskList' | transloco }}</a>
+<a [routerLink]="APP_ROUTES.BOARD" routerLinkActive="activated">{{ 'common.taskBoard' | transloco }}</a>
+  <div class="lang-switcher">
+    @for (lang of availableLangs; track lang.id) {
+    <app-button
+      (click)="switchLang(lang.id)"
+      type="simple"
+      [class.active]="lang.id === activeLang"
+    >
+      {{ lang.label }}
+    </app-button>
+    }
+  </div>
 </div>

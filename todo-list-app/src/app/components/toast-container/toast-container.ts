@@ -4,10 +4,11 @@ import { MatIcon } from '@angular/material/icon';
 import { ToastService } from '../../services/toast/toast';
 import { IToast } from '../../shared/types/toast.interface';
 import { TOAST_ICONS } from '../../shared/util/constants';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-toast-container',
-  imports: [MatIcon, CommonModule],
+  imports: [MatIcon, CommonModule, TranslocoModule],
   templateUrl: './toast-container.html',
   styleUrl: './toast-container.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

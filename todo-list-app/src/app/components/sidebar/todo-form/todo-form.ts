@@ -9,6 +9,7 @@ import { Button } from '../../../shared/ui/button/button';
 import { TOOLTIP_TEXT } from '../../../shared/util/constants';
 import { trimmedMinLength } from '../../../shared/validators/trimmed-minlength.validator';
 import { TodosStore } from '../../../store/todos-store';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-todo-form',
@@ -19,6 +20,7 @@ import { TodosStore } from '../../../store/todos-store';
     CommonModule,
     ShowTooltip,
     ReactiveFormsModule,
+    TranslocoModule,
   ],
   templateUrl: './todo-form.html',
   styleUrl: './todo-form.scss',

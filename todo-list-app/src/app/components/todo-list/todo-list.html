@@ -1,7 +1,7 @@
 <div class="todos-content">
   <section class="container todos-container">
     <div class="header">
-      <h1 class="headline">Todo List</h1>
+      <h1 class="headline">{{ 'common.taskList' | transloco }}</h1>
       <app-todo-filter [value]="todosStore.filterValue()" (valueChange)="onFilterChange($event)" />
     </div>
     @if (todosStore.isLoading()) {
@@ -14,7 +14,7 @@
           [currentTodo]="todo"
         ></app-todo-list-item>
         } @empty {
-        <li>There are no items. Type new task or change filter.</li>
+        <li>{{ 'common.emptyList' | transloco }}</li>
         }
       </ul>
     </div>

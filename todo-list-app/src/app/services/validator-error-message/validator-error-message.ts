@@ -1,10 +1,13 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
+import { TranslocoService } from '@jsverse/transloco';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ValidatorErrMessageService {
+  private translocoService = inject(TranslocoService);
+
   public showErrorMessage(control: AbstractControl | null): boolean {
     return control ? control.invalid && (control.touched || control.dirty) : false;
   }
@@ -16,27 +19,36 @@ export class ValidatorErrMessageService {
 
     const errors = control.errors;
     const firstErrorKey = Object.keys(errors)[0];
+    const keyPrefix = 'validation.';
 
     switch (firstErrorKey) {
       case 'required':
-        return `${fieldName} is required.`;
+        return this.translocoService.translate(keyPrefix + 'required', { fieldName });
 
       case 'minlength':
-        if (errors['minlength']?.requiredLength !== undefined) {
-          return `${fieldName} must be at least ${errors['minlength'].requiredLength} chars.`;
+        const requiredMinLength = errors['minlength']?.requiredLength;
+        if (requiredMinLength !== undefined) {
+          return this.translocoService.translate(keyPrefix + 'minLength', {
+            fieldName,
+            requiredLength: requiredMinLength,
+          });
         }
         break;
 
       case 'maxlength':
-        if (errors['maxlength']?.requiredLength !== undefined) {
-          return `${fieldName} cannot exceed ${errors['maxlength'].requiredLength} chars.`;
+        const requiredMaxLength = errors['maxlength']?.requiredLength;
+        if (requiredMaxLength !== undefined) {
+          return this.translocoService.translate(keyPrefix + 'maxLength', {
+            fieldName,
+            requiredLength: requiredMaxLength,
+          });
         }
         break;
 
       default:
-        return `${fieldName} is invalid`;
+        return this.translocoService.translate(keyPrefix + 'genericInvalid', { fieldName });
     }
 
-    return `${fieldName} is invalid`;
+    return this.translocoService.translate(keyPrefix + 'genericInvalid', { fieldName });
   }
 }

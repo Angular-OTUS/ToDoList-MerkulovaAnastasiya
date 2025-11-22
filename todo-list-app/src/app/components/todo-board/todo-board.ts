@@ -5,10 +5,11 @@ import { Loader } from '../../shared/ui/loader/loader';
 import { TodoListItem } from '../../shared/ui/todo-list-item/todo-list-item';
 import { APP_ROUTES } from '../../shared/util/constants';
 import { TodosStore } from '../../store/todos-store';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-todo-board',
-  imports: [TodoListItem, Loader, RouterOutlet],
+  imports: [TodoListItem, Loader, RouterOutlet, TranslocoModule],
   templateUrl: './todo-board.html',
   styleUrl: './todo-board.scss',
 })

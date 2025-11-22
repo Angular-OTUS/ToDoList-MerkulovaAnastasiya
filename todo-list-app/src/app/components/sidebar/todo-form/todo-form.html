@@ -1,12 +1,12 @@
 <div [ngStyle]="{ 'margin-top': '20px' }">
-  <h2>Add new todo</h2>
+  <h2>{{ 'todoForm.title' | transloco }}</h2>
   <form class="add-todo-form" [formGroup]="newTodoForm" (ngSubmit)="onSubmit($event)">
     <div class="form-fields">
       <mat-form-field class="form-input-wrapper">
         <input
           type="text"
           matInput
-          placeholder="Todo title"
+          [placeholder]="'todoForm.placeholderTitle' | transloco"
           formControlName="text"
           name="todo-title"
         />
@@ -19,7 +19,7 @@
       <mat-form-field class="form-input-wrapper fixed-textarea">
         <textarea
           matInput
-          placeholder="Todo description"
+          [placeholder]="'todoForm.placeholderDescription' | transloco"
           formControlName="description"
           rows="4"
           name="todo-description"
@@ -36,8 +36,8 @@
       [isDisabled]="newTodoForm.invalid"
       [class]="'form-button'"
       appShowTooltip
-      [tooltipText]="TOOLTIP_TEXT.ADD_BUTTON"
-      >Add task</app-button
+      [tooltipText]="TOOLTIP_TEXT.ADD_BUTTON | transloco"
+      >{{ 'todoForm.addButton' | transloco }}</app-button
     >
   </form>
 </div>
